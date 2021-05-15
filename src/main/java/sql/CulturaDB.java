@@ -17,42 +17,6 @@ public class CulturaDB {
     TODO Verificar se o investigador está associado à cultura
     */
 
-    /**
-     * For testing purposes only
-     */
-    public static void main(String[] args) throws SQLException {
-
-      //  prepareCulturaDB();
-
-        /*
-        ResultSet rs = TableAlerta.callSPSelect_Alerta(localConnection,1);
-        while(rs.next()){
-            for(String collum : TableAlerta.TABLE_ALERTA_COLLUMS){
-                System.out.println(collum +"="+ rs.getString(collum));
-
-            }
-            System.out.println();
-        }
-         */
-
-        Connection localConnection = connectDb(LOCAL_PATH_DB, ROOTUSERNAME, ROOTPASSWORD);
-        /*
-        String document2 ="Document{{_id=603819de967bf6020c0922c8, Zona=Z1, Sensor=H1, Data=2021-02-25 at 21:42:54 GMT, Medicao=7.552906794871795}}";
-        insertMedicao(document2,localConnection);
-
-        String document3 ="Document{{_id=603819de967bf6020c0922c8, Zona=Z1, Sensor=H1, Data=2021-02-25 at 21:42:55 GMT, Medicao=23.552906794871795}}";
-        insertMedicao(document3,localConnection);
-
-        String document ="Document{{_id=603819de967bf6020c0922c8, Zona=Z1, Sensor=H1, Data=2021-02-25 at 21:42:53 GMT, Medicao=17.558906794871795}}";
-        insertMedicao(document,localConnection);
-
-        String document4 ="Document{{_id=603819de967bf6020c0922c8, Zona=Z1, Sensor=H1, Data=2021-02-25 at 21:42:53 GMT, Medicao=107.552906794871795}}";
-        insertMedicao(document4,localConnection);
-
-         */
-        localConnection.close();
-    }
-
     public static void prepareCulturaDB() throws SQLException {
         createDb(LOCAL_PATH_MYSQL, ROOTUSERNAME, ROOTPASSWORD, DB_NAME);
 
@@ -65,8 +29,8 @@ public class CulturaDB {
                 System.out.println("Cannot connect to cloud, ignoring cloud DB");
                 createAllTablesDbCultura(localConnection);
             }
-                CulturaSP.createAllSP(localConnection);
-                createAllRoles(localConnection);
+            CulturaSP.createAllSP(localConnection);
+            createAllRoles(localConnection);
         }catch (Exception e){
             e.printStackTrace();
             System.out.println( " Problems-exiting");
