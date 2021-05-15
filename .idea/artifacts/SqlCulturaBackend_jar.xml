@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SqlCulturaBackend:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SqlCulturaBackend_jar</output-path>
+    <root id="archive" name="SqlCulturaBackend.jar">
+      <element id="module-output" name="SqlCulturaBackend" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/mysql/mysql-connector-java/8.0.24/mysql-connector-java-8.0.24.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/protobuf/protobuf-java/3.11.4/protobuf-java-3.11.4.jar" path-in-jar="/" />
+      <element id="library" level="project" name="Maven: mysql:mysql-connector-java:8.0.24" />
+      <element id="library" level="project" name="Maven: com.google.protobuf:protobuf-java:3.11.4" />
+    </root>
+  </artifact>
+</component>
