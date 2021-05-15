@@ -294,4 +294,18 @@ public class SqlController{
         return new java.sql.Timestamp(today.getTime());
     }
 
+    public static Object getLatestEntryFromTable(Connection connection, String tableName, String column) throws SQLException {
+        String sql = "SELECT * FROM " + tableName + " ORDER BY " + column + " DESC LIMIT 1";
+
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(sql);
+
+        String element = "";
+        while (rs.next()) {
+            element=rs.getString(column);
+        }
+
+        return element;
+    }
+
 }

@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-import static sql.SqlController.createStoredProcedure;
+import static sql.SqlController.*;
 
 public class TableCultura {
 	public static final String TABLE_CULTURA_NAME = "cultura";
@@ -83,7 +83,25 @@ public class TableCultura {
 	            Arrays.copyOfRange(TABLE_CULTURA_COLLUMS,1, TABLE_CULTURA_COLLUMS.length)
 	    );
 
-	    createStoredProcedure(connection, SP_INSERIR_CULTURA_NAME, statements, args);
+
+	   String culturaID_name = "idForCultura";
+	   String culturaIDAfterIF_name = "idForCulturaAfterIF";
+	   String culturaID = "DECLARE " + culturaID_name + " " + TABLE_CULTURA_DATATYPES[0] + ";";
+	   String culturaIDAfterIf = "DECLARE " + culturaIDAfterIF_name + " " + TABLE_CULTURA_DATATYPES[0] + ";";
+
+	   String statementsCultura = "SELECT " + TABLE_CULTURA_COLLUMS[0] + " INTO " + culturaID_name + " FROM " + TABLE_CULTURA_NAME
+			   + " ORDER BY " + TABLE_CULTURA_COLLUMS[0] + " DESC LIMIT 1;";
+
+	   statementsCultura += "\nSET " + culturaIDAfterIF_name + " = IFNULL(" + culturaID_name + ",0) + 1;";
+
+	   String finalStatements = "\n" + culturaID + "\n" + culturaIDAfterIf + "\n" + statementsCultura + "\n" + statements;
+
+	   finalStatements += ";\n" + CulturaSP.generateINSERTForParametroCultura(TableParametroCultura.TABLE_PARAMETROCULTURA_NAME,
+			   Arrays.copyOfRange(TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS,1,
+					   TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS.length),
+			   TableParametroCultura.DEFAULT_VALUES,culturaIDAfterIF_name);
+
+	   createStoredProcedure(connection, SP_INSERIR_CULTURA_NAME, finalStatements, args);
 
 	}
 

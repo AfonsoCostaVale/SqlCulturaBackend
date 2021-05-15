@@ -121,5 +121,23 @@ public class CulturaSP {
 		return insertString;
 	}
 
+	public static String generateINSERTForParametroCultura(String tableName, String[] tableCollums,String[] values, String culturaID) {
+		String insertString = "INSERT INTO " + tableName + " (";
+		for (String value :
+				tableCollums) {
+			insertString += " " + value + ",";
+		}
+		insertString = insertString.substring(0,insertString.length() - 1);
+		insertString += ") VALUES ( " + culturaID + ", ";
+		for (String value :
+				values) {
+			insertString += " '" + value + "',";
+		}
+		insertString = insertString.substring(0,insertString.length() - 1);
+		insertString += ")";
+
+		return insertString;
+	}
+
 
 }

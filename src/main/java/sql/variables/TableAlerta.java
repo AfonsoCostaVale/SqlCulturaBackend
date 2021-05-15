@@ -171,9 +171,11 @@ public class TableAlerta {
 
 		String insertDanger = CulturaSP.generateINSERTForAlerta(TABLE_ALERTA_NAME, Arrays.copyOfRange(TABLE_ALERTA_COLLUMS,1, TABLE_ALERTA_COLLUMS.length),"DangerZone");
 		String insertDeath = CulturaSP.generateINSERTForAlerta(TABLE_ALERTA_NAME, Arrays.copyOfRange(TABLE_ALERTA_COLLUMS,1, TABLE_ALERTA_COLLUMS.length),"DeathZone");
+		String insertNormal = CulturaSP.generateINSERTForAlerta(TABLE_ALERTA_NAME, Arrays.copyOfRange(TABLE_ALERTA_COLLUMS,1, TABLE_ALERTA_COLLUMS.length),"Healthy");
 
-		finalStatements += "\nIF (sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteDangerZoneInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " >= " + Variable_LimiteInferior_name  + ") OR (sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteDangerZoneSuperior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " <= " + Variable_LimiteSuperior_name + ") THEN\n" + insertDanger + " ;END IF;";
-		finalStatements += "\nIF sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteInferior_name + " OR sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteSuperior_name + " THEN\n" + insertDeath + " ;END IF";
+		finalStatements += "\nIF (sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteDangerZoneInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteInferior_name  + ") OR (sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteDangerZoneSuperior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteSuperior_name + ") THEN\n" + insertDanger + " ;END IF;";
+		finalStatements += "\nIF sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteInferior_name + " OR sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteSuperior_name + " THEN\n" + insertDeath + " ;END IF;";
+		finalStatements += "\nIF sp_" + TABLE_ALERTA_COLLUMS[4] + " >= " + Variable_LimiteInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " <= " + Variable_LimiteSuperior_name + " THEN\n" + insertNormal + " ;END IF";
 
 	    createStoredProcedure(connection, SP_INSERIR_ALERTA_NAME, finalStatements, args);
 
