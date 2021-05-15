@@ -49,13 +49,13 @@ public class TableAlerta {
 	 *     <li>[1]  INTEGER         - IdZona                </li>
 	 *     <li>[2]  INTEGER         - IdSensor              </li>
 	 *     <li>[3]  TIMESTAMP       - Hora                  </li>
-	 *     <li>[4]  DECIMAL(1,0)    - Leitura               </li>
+	 *     <li>[4]  NUMERIC (5,2)   - Leitura              </li>
 	 *     <li>[5]  VARCHAR(1)      - TipoAlerta            </li>
 	 *     <li>[6]  VARCHAR(100)    - Cultura               </li>
 	 *     <li>[7]  INTEGER         - IdUtilizador          </li>
 	 *     <li>[8]  TIMESTAMP       - HoraEscrita           </li>
-	 *     <li>[9] INTEGER         - IdParametroCultura    </li>
-	 *     <li>[10]  VARCHAR(100)    - NivelAlerta           </li>
+	 *     <li>[9] 	INTEGER         - IdParametroCultura    </li>
+	 *     <li>[10] VARCHAR(100)   	- NivelAlerta           </li>
 	 * </ul>
 	 */
 	public static final String[] TABLE_ALERTA_DATATYPES = {
@@ -175,7 +175,7 @@ public class TableAlerta {
 
 		finalStatements += "\nIF (sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteDangerZoneInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteInferior_name  + ") OR (sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteDangerZoneSuperior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteSuperior_name + ") THEN\n" + insertDanger + " ;END IF;";
 		finalStatements += "\nIF sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteInferior_name + " OR sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteSuperior_name + " THEN\n" + insertDeath + " ;END IF;";
-		finalStatements += "\nIF sp_" + TABLE_ALERTA_COLLUMS[4] + " >= " + Variable_LimiteInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " <= " + Variable_LimiteSuperior_name + " THEN\n" + insertNormal + " ;END IF";
+		finalStatements += "\nIF sp_" + TABLE_ALERTA_COLLUMS[4] + " >= " + Variable_LimiteDangerZoneInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " <= " + Variable_LimiteDangerZoneSuperior_name + " THEN\n" + insertNormal + " ;END IF";
 
 	    createStoredProcedure(connection, SP_INSERIR_ALERTA_NAME, finalStatements, args);
 
