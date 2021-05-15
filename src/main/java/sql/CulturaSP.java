@@ -1,6 +1,6 @@
 package sql;
 
-import sql.variables.*;
+import sql.variables.tables.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;

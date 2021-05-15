@@ -1,6 +1,6 @@
 package sql;
 
-import sql.variables.*;
+import sql.variables.tables.*;
 import util.Pair;
 
 import java.sql.Connection;

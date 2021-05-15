@@ -1,6 +1,7 @@
-package sql.variables;
+package sql.variables.tables;
 
 import sql.CulturaSP;
+import sql.variables.tables.TableMedicao;
 
 import java.sql.Connection;
 import java.sql.SQLException;

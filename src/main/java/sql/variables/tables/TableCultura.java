@@ -1,4 +1,4 @@
-package sql.variables;
+package sql.variables.tables;
 
 import sql.CulturaSP;
 
