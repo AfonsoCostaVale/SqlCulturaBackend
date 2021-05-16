@@ -75,13 +75,26 @@ public class TableCultura {
 	public static final String SP_ELIMINAR_CULTURA_NAME             = "Eliminar_Cultura";
 
 	public static void createSPInserir_Cultura(Connection connection) throws SQLException {
-		String args = CulturaSP.generateARGUMENTS(
-	            Arrays.copyOfRange(TABLE_CULTURA_COLLUMS,1, TABLE_CULTURA_COLLUMS.length       ),
-	            Arrays.copyOfRange(TABLE_CULTURA_DATATYPES,1, TABLE_CULTURA_DATATYPES.length   )
-	    );
-	    String statements = CulturaSP.generateINSERT(TABLE_CULTURA_NAME,
-	            Arrays.copyOfRange(TABLE_CULTURA_COLLUMS,1, TABLE_CULTURA_COLLUMS.length)
-	    );
+
+		String[]argsCultura = Arrays.copyOfRange(TABLE_CULTURA_COLLUMS,1, TABLE_CULTURA_COLLUMS.length);
+		String[]argsParametros = Arrays.copyOfRange(TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS, 2, 8);
+
+		String[]argsForBoth = new String[argsCultura.length + argsParametros.length];
+
+		System.arraycopy(argsCultura,0,argsForBoth,0,argsCultura.length);
+		System.arraycopy(argsParametros,0,argsForBoth,argsCultura.length,argsParametros.length);
+
+		String[]argsCulturaType = Arrays.copyOfRange(TABLE_CULTURA_DATATYPES,1, TABLE_CULTURA_DATATYPES.length);
+		String[]argsParametrosType = Arrays.copyOfRange(TableParametroCultura.TABLE_PARAMETROCULTURA_DATATYPES, 2, 8);
+
+		String[]argsForBothType = new String[argsCulturaType.length + argsParametrosType.length];
+
+		System.arraycopy(argsCulturaType,0,argsForBothType,0,argsCulturaType.length);
+		System.arraycopy(argsParametrosType,0,argsForBothType,argsCulturaType.length,argsParametrosType.length);
+
+		String args = CulturaSP.generateARGUMENTS(argsForBoth, argsForBothType);
+
+	    String statements = CulturaSP.generateINSERT(TABLE_CULTURA_NAME, argsCultura);
 
 
 	   String culturaID_name = "idForCultura";
@@ -96,10 +109,7 @@ public class TableCultura {
 
 	   String finalStatements = "\n" + culturaID + "\n" + culturaIDAfterIf + "\n" + statementsCultura + "\n" + statements;
 
-	   finalStatements += ";\n" + CulturaSP.generateINSERTForParametroCultura(TableParametroCultura.TABLE_PARAMETROCULTURA_NAME,
-			   Arrays.copyOfRange(TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS,1,
-					   TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS.length),
-			   TableParametroCultura.DEFAULT_VALUES,culturaIDAfterIF_name);
+	   finalStatements += ";\n" + CulturaSP.generateINSERTForParametroCultura(argsParametros,culturaIDAfterIF_name,15);
 
 	   createStoredProcedure(connection, SP_INSERIR_CULTURA_NAME, finalStatements, args);
 

@@ -4,6 +4,7 @@ import sql.variables.tables.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 public class CulturaSP {
 
@@ -33,9 +34,9 @@ public class CulturaSP {
 	    TableCultura.createSPAlterar_Cultura                     (connection);
 	    TableCultura.createSPEliminar_Cultura                    (connection);
 
-	    TableParametroCultura.createSPInserir_ParametroCultura   (connection);
+	  //  TableParametroCultura.createSPInserir_ParametroCultura   (connection);
 	    TableParametroCultura.createSPAlterar_ParametroCultura   (connection);
-	    TableParametroCultura.createSPEliminar_ParametroCultura  (connection);
+	  //  TableParametroCultura.createSPEliminar_ParametroCultura  (connection);
 
 	    TableAlerta.createSPInserir_Alerta                       (connection);
 	    TableAlerta.createSPAlterar_Alerta                       (connection);
@@ -79,16 +80,18 @@ public class CulturaSP {
 	    return insertString;
 	}
 
-	public static String generateINSERTForUser(String tableName, String[] tableCollums,String role) {
-		String insertString = "INSERT INTO " + tableName + " (";
+	public static String generateINSERTForUser(String role) {
+		String insertString = "INSERT INTO " + TableUtilizador.TABLE_UTILIZADOR_NAME + " (";
 		for (String value :
-				tableCollums) {
+				Arrays.copyOfRange(TableUtilizador.TABLE_UTILIZADOR_COLLUMS,
+						1, TableUtilizador.TABLE_UTILIZADOR_COLLUMS.length)) {
 			insertString += " " + value + ",";
 		}
 		insertString = insertString.substring(0,insertString.length() - 1);
 		insertString += ") VALUES ( ";
 		for (String value :
-				tableCollums) {
+				Arrays.copyOfRange(TableUtilizador.TABLE_UTILIZADOR_COLLUMS,
+						1, TableUtilizador.TABLE_UTILIZADOR_COLLUMS.length)) {
 			if(!value.equals(TableUtilizador.TABLE_UTILIZADOR_COLLUMS[4]))
 				insertString += " sp_" + value + ",";
 			else
@@ -100,16 +103,18 @@ public class CulturaSP {
 		return insertString;
 	}
 
-	public static String generateINSERTForAlerta(String tableName, String[] tableCollums,String alertaType) {
-		String insertString = "INSERT INTO " + tableName + " (";
+	public static String generateINSERTForAlerta(String alertaType) {
+		String insertString = "INSERT INTO " + TableAlerta.TABLE_ALERTA_NAME + " (";
 		for (String value :
-				tableCollums) {
+				Arrays.copyOfRange(TableAlerta.TABLE_ALERTA_COLLUMS,
+						1, TableAlerta.TABLE_ALERTA_COLLUMS.length)) {
 			insertString += " " + value + ",";
 		}
 		insertString = insertString.substring(0,insertString.length() - 1);
 		insertString += ") VALUES ( ";
 		for (String value :
-				tableCollums) {
+				Arrays.copyOfRange(TableAlerta.TABLE_ALERTA_COLLUMS,
+						1, TableAlerta.TABLE_ALERTA_COLLUMS.length)) {
 			if(!value.equals(TableAlerta.TABLE_ALERTA_COLLUMS[10]))
 				insertString += " sp_" + value + ",";
 			else
@@ -121,17 +126,27 @@ public class CulturaSP {
 		return insertString;
 	}
 
-	public static String generateINSERTForParametroCultura(String tableName, String[] tableCollums,String[] values, String culturaID) {
-		String insertString = "INSERT INTO " + tableName + " (";
+	public static String generateINSERTForParametroCultura(String[] values, String culturaID, double percentage) {
+		String insertString = "INSERT INTO " + TableParametroCultura.TABLE_PARAMETROCULTURA_NAME + " (";
 		for (String value :
-				tableCollums) {
+				Arrays.copyOfRange(TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS,1,
+						TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS.length)) {
 			insertString += " " + value + ",";
 		}
 		insertString = insertString.substring(0,insertString.length() - 1);
 		insertString += ") VALUES ( " + culturaID + ", ";
-		for (String value :
-				values) {
-			insertString += " '" + value + "',";
+		//Min & Max
+		for (String value : values) {
+				insertString += " sp_" + value + ",";
+		}
+		//DangerZone
+		for(int i=0;i<values.length;i++) {
+			if (values[i].contains("Min"))
+				insertString += " sp_" + values[i] + " + " + percentage/100 + " * (sp_" + values[i+1] +
+						" - sp_" + values[i] + "),";
+			else
+				insertString += " sp_" + values[i] + " - " + percentage/100 + " * (sp_" + values[i] +
+						" - sp_" + values[i-1] + "),";
 		}
 		insertString = insertString.substring(0,insertString.length() - 1);
 		insertString += ")";

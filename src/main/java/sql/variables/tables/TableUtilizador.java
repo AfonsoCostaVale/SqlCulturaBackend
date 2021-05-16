@@ -80,9 +80,7 @@ public class TableUtilizador {
 	            Arrays.copyOfRange(TABLE_UTILIZADOR_COLLUMS,1, TABLE_UTILIZADOR_COLLUMS.length-1),
 	            Arrays.copyOfRange(TABLE_UTILIZADOR_DATATYPES,1, TABLE_UTILIZADOR_DATATYPES.length-1)
 	    );
-		String statements = CulturaSP.generateINSERTForUser(TABLE_UTILIZADOR_NAME,
-				Arrays.copyOfRange(TABLE_UTILIZADOR_COLLUMS,1, TABLE_UTILIZADOR_COLLUMS.length),role
-		);
+		String statements = CulturaSP.generateINSERTForUser(role);
 
 	    String create = "SET @query = CONCAT('CREATE USER \"', sp_"+ TABLE_UTILIZADOR_COLLUMS[2]+
 				", '\"@\"', 'localhost', '\" IDENTIFIED BY \"', sp_"+ TABLE_UTILIZADOR_COLLUMS[3]+", '\";');\n" +

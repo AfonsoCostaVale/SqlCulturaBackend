@@ -183,13 +183,4 @@ public class TableParametroCultura {
 
 	    createStoredProcedure(connection, SP_ELIMINAR_PARAMETRO_CULTURA_NAME, statements, args);
 	}
-
-	public static final String[] DEFAULT_VALUES = {
-				"10","100",		//MinMaxHumidade
-				"10","100",		//MinMaxTemperatura
-				"10","100",		//MinMaxLuz
-				"20","80",		//MinMaxDangerZoneHumidade
-				"20","80",		//MinMaxDangerZoneTemperatura
-				"20","80"		//MinMaxDangerZoneLuz
-	};
 }
