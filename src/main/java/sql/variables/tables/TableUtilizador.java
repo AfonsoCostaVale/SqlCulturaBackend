@@ -145,8 +145,8 @@ public class TableUtilizador {
 
 	public static void createSPEliminar_User(Connection connection) throws SQLException {
 
-		String args = "IN sp_Param VARCHAR(100)" + ", IN sp_ParamValue " + TABLE_UTILIZADOR_DATATYPES[0];
-	    String statements = "DELETE FROM " + TABLE_UTILIZADOR_NAME + " WHERE 'sp_Param' = sp_ParamValue";
+		String args = "IN sp_Param VARCHAR(100)" + ", IN sp_ParamValue VARCHAR(100)" + ", IN sp_NomeUtilizador VARCHAR(100)" ;
+	    String statements = "DELETE FROM " + TABLE_UTILIZADOR_NAME + " WHERE 'sp_Param' = sp_ParamValue; DROP USER sp_NomeUtilizador";
 
 	    createStoredProcedure(connection, SP_ELIMINAR_USER_NAME, statements, args);
 	}

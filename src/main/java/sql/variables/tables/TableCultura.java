@@ -94,22 +94,17 @@ public class TableCultura {
 
 		String args = CulturaSP.generateARGUMENTS(argsForBoth, argsForBothType);
 
-	    String statements = CulturaSP.generateINSERT(TABLE_CULTURA_NAME, argsCultura);
-
+	    String statements = CulturaSP.generateINSERT(TABLE_CULTURA_NAME, argsCultura)+";";
 
 	   String culturaID_name = "idForCultura";
-	   String culturaIDAfterIF_name = "idForCulturaAfterIF";
 	   String culturaID = "DECLARE " + culturaID_name + " " + TABLE_CULTURA_DATATYPES[0] + ";";
-	   String culturaIDAfterIf = "DECLARE " + culturaIDAfterIF_name + " " + TABLE_CULTURA_DATATYPES[0] + ";";
 
 	   String statementsCultura = "SELECT " + TABLE_CULTURA_COLLUMS[0] + " INTO " + culturaID_name + " FROM " + TABLE_CULTURA_NAME
 			   + " ORDER BY " + TABLE_CULTURA_COLLUMS[0] + " DESC LIMIT 1;";
 
-	   statementsCultura += "\nSET " + culturaIDAfterIF_name + " = IFNULL(" + culturaID_name + ",0) + 1;";
+	   String finalStatements = "\n" + culturaID + "\n" + statements + "\n" + statementsCultura;
 
-	   String finalStatements = "\n" + culturaID + "\n" + culturaIDAfterIf + "\n" + statementsCultura + "\n" + statements;
-
-	   finalStatements += ";\n" + CulturaSP.generateINSERTForParametroCultura(argsParametros,culturaIDAfterIF_name,15);
+	   finalStatements += "\n" + CulturaSP.generateINSERTForParametroCultura(argsParametros,culturaID_name,15);
 
 	   createStoredProcedure(connection, SP_INSERIR_CULTURA_NAME, finalStatements, args);
 
