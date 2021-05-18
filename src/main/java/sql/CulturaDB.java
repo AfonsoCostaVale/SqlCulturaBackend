@@ -146,6 +146,8 @@ public class CulturaDB {
         grantPermissionRole(connection, TableUtilizador.ROLE_INVESTIGADOR,"SELECT", TableZona.TABLE_ZONA_NAME,false);
         //Stored Procedures
         grantPermissionRole(connection, TableUtilizador.ROLE_INVESTIGADOR,"EXECUTE", TableParametroCultura.SP_ALTERAR_PARAMETRO_CULTURA_NAME,true);
+        grantPermissionRole(connection, TableUtilizador.ROLE_INVESTIGADOR,"EXECUTE", TableAlerta.SP_SELECT_ALERTA_NAME,true);
+
     }
 
     private static void createTecnicoRole(Connection connection) throws SQLException {

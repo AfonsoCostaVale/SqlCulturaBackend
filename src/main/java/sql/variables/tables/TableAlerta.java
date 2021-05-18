@@ -224,8 +224,8 @@ public class TableAlerta {
 
 	public static void createSPSelect_Alerta(Connection connection) throws SQLException {
 
-		String args = "IN sp_"+ TABLE_ALERTA_COLLUMS[7] + " " + TABLE_ALERTA_DATATYPES[7];
-	    String statements = "SELECT * FROM " + TABLE_ALERTA_NAME + " WHERE sp_" + TABLE_ALERTA_COLLUMS[7] + " = " + TABLE_ALERTA_NAME +"."+ TABLE_ALERTA_COLLUMS[7];
+		String args ="";// "IN sp_"+ TABLE_ALERTA_COLLUMS[7] + " " + TABLE_ALERTA_DATATYPES[7];
+	    String statements = "SELECT * FROM " + TABLE_ALERTA_NAME;// + " WHERE sp_" + TABLE_ALERTA_COLLUMS[7] + " = " + TABLE_ALERTA_NAME +"."+ TABLE_ALERTA_COLLUMS[7];
 
 	    createStoredProcedure(connection, SP_SELECT_ALERTA_NAME, statements, args);
 	}
