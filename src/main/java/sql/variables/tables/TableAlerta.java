@@ -209,10 +209,26 @@ public class TableAlerta {
 
 	public static void createSPSelect_Alerta(Connection connection) throws SQLException {
 
-		String args = "IN sp_"+ TABLE_ALERTA_COLLUMS[7] + " " + TABLE_ALERTA_DATATYPES[7];
-	    String statements = "SELECT * FROM " + TABLE_ALERTA_NAME + " WHERE sp_" + TABLE_ALERTA_COLLUMS[7] + " = " + TABLE_ALERTA_NAME +"."+ TABLE_ALERTA_COLLUMS[7];
-
-	    createStoredProcedure(connection, SP_SELECT_ALERTA_NAME, statements, args);
+		String args ="IN sp_"+ TableUtilizador.TABLE_UTILIZADOR_COLLUMS[2] + " " + TableUtilizador.TABLE_UTILIZADOR_DATATYPES[2];
+		String statements = "SELECT "
+				+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[1] + ", "
+				+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[2] + ", "
+				+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[3] + ", "
+				+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[4] + ", "
+				+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[5] + ", "
+				+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[6] + ", "
+				+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[7] + ", "
+				+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[8] + ", "
+				+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[9] + ", "
+				+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[10] +" "
+				+" FROM " + TABLE_ALERTA_NAME + ", "+TableUtilizador.TABLE_UTILIZADOR_NAME
+				//where Utilizador.IDUtilizador = Alerta.IDUtilizador
+				+" WHERE "+ TableUtilizador.TABLE_UTILIZADOR_NAME+"."+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[0] +" = " +TABLE_ALERTA_NAME+"."+TABLE_ALERTA_COLLUMS[7]
+				//AND Utilizador.Email = sp_username
+				+" AND " +TableUtilizador.TABLE_UTILIZADOR_NAME + "." + TableUtilizador.TABLE_UTILIZADOR_COLLUMS[2] + " = sp_"+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[2]
+				+" ORDER BY "+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[8] + " DESC LIMIT 100 "
+				;
+		createStoredProcedure(connection, SP_SELECT_ALERTA_NAME, statements, args);
 	}
 
 	public static ResultSet callSPSelect_Alerta(Connection connection, int IdUtilizador) throws SQLException {
