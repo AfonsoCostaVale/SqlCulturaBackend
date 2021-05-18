@@ -39,6 +39,7 @@ public class CulturaSP {
 	  //  TableParametroCultura.createSPEliminar_ParametroCultura  (connection);
 
 	    TableAlerta.createSPInserir_Alerta                       (connection);
+	    TableAlerta.createSPInserir_Alerta_Predicted             (connection);
 	    TableAlerta.createSPAlterar_Alerta                       (connection);
 	    TableAlerta.createSPEliminar_Alerta                      (connection);
 		TableAlerta.createSPSelect_Alerta                        (connection);
@@ -59,6 +60,24 @@ public class CulturaSP {
 	        System.out.println("Check sqlVariables.java to fix");
 	        return "";
 	    }
+
+	}
+
+	public static String generateARGUMENTSForAlertaPredicted(String[] tableCollums, String[] tableDatatypes) {
+		String args ="";
+		if(tableCollums.length == tableDatatypes.length){
+			for(int i =0 ; i<tableCollums.length && i<tableDatatypes.length ;i++){
+				args += "IN sp_" + tableCollums[i] + " " + tableDatatypes[i] +",";
+			}
+			args += "IN sp_PredictedValue NUMERIC (5,2)";
+			return args;
+
+		}else{
+			System.out.println("Error generating IN String");
+			System.out.println("Tables dont have the same length!!");
+			System.out.println("Check sqlVariables.java to fix");
+			return "";
+		}
 
 	}
 

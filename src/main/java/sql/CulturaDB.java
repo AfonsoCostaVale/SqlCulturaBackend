@@ -199,6 +199,7 @@ public class CulturaDB {
     }
     
     public static void insertMedicao(String medicao, Connection connection) throws SQLException {
+        lastMedicao = new ArrayList<>();
         ArrayList<String> values = new ArrayList<>();
         String[] splitData = medicao.split(",");
         String idSensor = "";
@@ -238,7 +239,8 @@ public class CulturaDB {
         String[] valuesToArray = new String[values.size()];
         valuesToArray = values.toArray(valuesToArray);
         callStoredProcedure(connection, TableMedicao.SP_INSERIR_MEDICAO_NAME, valuesToArray);
-        checkForAlerta(connection, values);
+        lastMedicao = values;
+        checkForAlerta(connection, values, false);
     }
 
     private static boolean didItGoThrough(Connection connection, ArrayList<String> medicaoValues) throws SQLException {
@@ -257,8 +259,13 @@ public class CulturaDB {
            return true;
     }
 
-    private static void checkForAlerta(Connection connection, ArrayList<String> values) throws SQLException {
-        if(!didItGoThrough(connection,values)) return;
+    private static ArrayList<String> lastMedicao;
+
+    public static void checkForAlerta(Connection connection, ArrayList<String> values, boolean isItPredicted) throws SQLException {
+        if(!isItPredicted) {
+            if(!didItGoThrough(connection,values))
+                return;
+        }
         ArrayList<String> culturasAffected =
                 getElementFromDbTable(connection,TableCultura.TABLE_CULTURA_NAME,new String[]{TableCultura.TABLE_CULTURA_COLLUMS[0]},TableCultura.TABLE_CULTURA_COLLUMS[4],values.get(0));
 
@@ -294,7 +301,12 @@ public class CulturaDB {
 
             String[] valuesToArray = new String[values.size()];
             valuesToArray = valuesForAlerta.toArray(valuesToArray);
-            callStoredProcedure(connection,TableAlerta.SP_INSERIR_ALERTA_NAME,valuesToArray);
+            if(!isItPredicted){ callStoredProcedure(connection,TableAlerta.SP_INSERIR_ALERTA_NAME,valuesToArray); }
+            else {
+                valuesForAlerta.add(values.get(4));
+                valuesToArray = valuesForAlerta.toArray(valuesToArray);
+                callStoredProcedure(connection,TableAlerta.SP_INSERIR_ALERTA_PREDICTED_NAME,valuesToArray);
+            }
             valuesForAlerta = new ArrayList<>();
         }
 
@@ -308,9 +320,16 @@ public class CulturaDB {
     }
 
     //For Array of last medicoes in MQTTReader
-    public static double getLastMedicao(Connection connection) throws SQLException {
+    public static double getLastLeitura(Connection connection) throws SQLException {
         String leitura = (String) getLatestEntryFromTable(connection,TableMedicao.TABLE_MEDICAO_NAME,TableMedicao.TABLE_MEDICAO_COLLUMS[4]);
-        return Double.parseDouble(leitura);
+        if(!leitura.equals(""))
+            return Double.parseDouble(leitura);
+        return 0;
     }
 
+    public static ArrayList<String> getLastMedicao(Connection connection) throws SQLException {
+        if(didItGoThrough(connection,lastMedicao))
+            return lastMedicao;
+        return new ArrayList<>();
+    }
 }

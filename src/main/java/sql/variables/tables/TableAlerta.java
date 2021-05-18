@@ -83,7 +83,7 @@ public class TableAlerta {
 	 *     <li>[6]  NOT NULL                                        - Cultura               </li>
 	 *     <li>[7]  NOT NULL                                        - IdUtilizador          </li>
 	 *     <li>[8]  NOT NULL UNIQUE                                 - HoraEscrita           </li>
-	 *     <li>[9] 	NOT NULL                                        	- IdParametroCultura    </li>
+	 *     <li>[9] 	NOT NULL                                        - IdParametroCultura    </li>
 	 *     <li>[10] NOT NULL                                      	- NivelAlerta           </li>
 	 * </ul>
 	 */
@@ -119,6 +119,7 @@ public class TableAlerta {
 	};
 
 	public static final String SP_INSERIR_ALERTA_NAME               = "Inserir_Alerta";
+	public static final String SP_INSERIR_ALERTA_PREDICTED_NAME     = "Inserir_Alerta_Predicted";
 	public static final String SP_ALTERAR_ALERTA_NAME               = "Alterar_Alerta";
 	public static final String SP_ELIMINAR_ALERTA_NAME              = "Eliminar_Alerta";
 	public static final String SP_SELECT_ALERTA_NAME                = "Selecionar_Alerta";
@@ -130,6 +131,99 @@ public class TableAlerta {
 	            Arrays.copyOfRange(TABLE_ALERTA_DATATYPES,1, TABLE_ALERTA_DATATYPES.length-1   )
 	    );
 
+		String Variable_LimiteInferior_name = "alerta_Min";
+		String Variable_LimiteDangerZoneInferior_name = "alerta_Danger_Min";
+		String Variable_LimiteSuperior_name = "alerta_Max";
+		String Variable_LimiteDangerZoneSuperior_name = "alerta_Danger_Max";
+
+		String lastAlertaIf_name = "last_alertaIf";
+
+		String finalStatements = argsForAlertas();
+
+		String insertDanger = CulturaSP.generateINSERTForAlerta("DangerZone");
+		String insertDeath = CulturaSP.generateINSERTForAlerta("DeathZone");
+		String insertNormal = CulturaSP.generateINSERTForAlerta("Healthy");
+
+		finalStatements += "\nIF " + lastAlertaIf_name + " != 'DangerZone' AND ((sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteDangerZoneInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteInferior_name  + ") OR (sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteDangerZoneSuperior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteSuperior_name + ")) THEN\n" + insertDanger + " ;END IF;";
+		finalStatements += "\nIF " + lastAlertaIf_name + " != 'DeathZone' AND (sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteInferior_name + " OR sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteSuperior_name + ") THEN\n" + insertDeath + " ;END IF;";
+		finalStatements += "\nIF " + lastAlertaIf_name + " != 'Healthy' AND (sp_" + TABLE_ALERTA_COLLUMS[4] + " >= " + Variable_LimiteDangerZoneInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " <= " + Variable_LimiteDangerZoneSuperior_name + ") THEN\n" + insertNormal + " ;END IF";
+
+	    createStoredProcedure(connection, SP_INSERIR_ALERTA_NAME, finalStatements, args);
+
+	}
+
+	public static void createSPInserir_Alerta_Predicted(Connection connection) throws SQLException {
+		String args = CulturaSP.generateARGUMENTSForAlertaPredicted(
+				Arrays.copyOfRange(TABLE_ALERTA_COLLUMS,1, TABLE_ALERTA_COLLUMS.length-1 ),
+				Arrays.copyOfRange(TABLE_ALERTA_DATATYPES,1, TABLE_ALERTA_DATATYPES.length-1   )
+		);
+
+		String Variable_LimiteInferior_name = "alerta_Min";
+		String Variable_LimiteDangerZoneInferior_name = "alerta_Danger_Min";
+		String Variable_LimiteSuperior_name = "alerta_Max";
+		String Variable_LimiteDangerZoneSuperior_name = "alerta_Danger_Max";
+
+		String lastAlertaIf_name = "last_alertaIf";
+
+		String finalStatements = argsForAlertas();
+
+		String insertDanger = CulturaSP.generateINSERTForAlerta("Aproaching DangerZone...");
+		String insertDeath = CulturaSP.generateINSERTForAlerta("Aproaching DeathZone...");
+		String insertNormal = CulturaSP.generateINSERTForAlerta("Aproaching Healthy...");
+
+		finalStatements += "\nIF " + lastAlertaIf_name + " != 'Aproaching DangerZone...' AND " + lastAlertaIf_name + " !='DangerZone' AND ((sp_PredictedValue < " + Variable_LimiteDangerZoneInferior_name + " AND sp_PredictedValue > " + Variable_LimiteInferior_name  + ") OR (sp_PredictedValue > " + Variable_LimiteDangerZoneSuperior_name + " AND sp_PredictedValue < " + Variable_LimiteSuperior_name + ")) THEN\n" + insertDanger + " ;END IF;";
+		finalStatements += "\nIF " + lastAlertaIf_name + " != 'Aproaching DeathZone...' AND " + lastAlertaIf_name + " !='DeathZone' AND (sp_PredictedValue < " + Variable_LimiteInferior_name + " OR sp_PredictedValue > " + Variable_LimiteSuperior_name + ") THEN\n" + insertDeath + " ;END IF;";
+		finalStatements += "\nIF " + lastAlertaIf_name + " != 'Aproaching Healthy...' AND " + lastAlertaIf_name + " !='Healthy' AND (sp_PredictedValue >= " + Variable_LimiteDangerZoneInferior_name + " AND sp_PredictedValue <= " + Variable_LimiteDangerZoneSuperior_name + ") THEN\n" + insertNormal + " ;END IF";
+
+		createStoredProcedure(connection, SP_INSERIR_ALERTA_PREDICTED_NAME, finalStatements, args);
+	}
+
+	public static void createSPAlterar_Alerta(Connection connection) throws SQLException {
+
+		String args = CulturaSP.generateARGUMENTS(TABLE_ALERTA_COLLUMS, TABLE_ALERTA_DATATYPES);
+
+
+	    String statements = "UPDATE " + TABLE_ALERTA_NAME + " SET " + TABLE_ALERTA_COLLUMS[1] + " = sp_" + TABLE_ALERTA_COLLUMS[1] +
+	            " ," + TABLE_ALERTA_COLLUMS[2] + " = sp_" + TABLE_ALERTA_COLLUMS[2] +
+	            " ," + TABLE_ALERTA_COLLUMS[3] + " = sp_" + TABLE_ALERTA_COLLUMS[3] +
+	            " ," + TABLE_ALERTA_COLLUMS[4] + " = sp_" + TABLE_ALERTA_COLLUMS[4] +
+	            " ," + TABLE_ALERTA_COLLUMS[5] + " = sp_" + TABLE_ALERTA_COLLUMS[5] +
+	            " ," + TABLE_ALERTA_COLLUMS[6] + " = sp_" + TABLE_ALERTA_COLLUMS[6] +
+	            " ," + TABLE_ALERTA_COLLUMS[7] + " = sp_" + TABLE_ALERTA_COLLUMS[7] +
+	            " ," + TABLE_ALERTA_COLLUMS[8] + " = sp_" + TABLE_ALERTA_COLLUMS[8] +
+	            " ," + TABLE_ALERTA_COLLUMS[9] + " = sp_" + TABLE_ALERTA_COLLUMS[9] +
+	            " ," + TABLE_ALERTA_COLLUMS[10] + " = sp_" + TABLE_ALERTA_COLLUMS[10] +
+	            " WHERE " + TABLE_ALERTA_COLLUMS[0] + " = sp_" + TABLE_ALERTA_COLLUMS[0];
+
+	    createStoredProcedure(connection, SP_ALTERAR_ALERTA_NAME, statements, args);
+
+	}
+
+	public static void createSPEliminar_Alerta(Connection connection) throws SQLException {
+
+		String args = "IN sp_Param VARCHAR(100)" + ", IN sp_ParamValue " + TABLE_ALERTA_DATATYPES[0];
+	    String statements = "DELETE FROM " + TABLE_ALERTA_NAME + " WHERE 'sp_Param' = sp_ParamValue";
+
+	    createStoredProcedure(connection, SP_ELIMINAR_ALERTA_NAME, statements, args);
+	}
+
+	public static void createSPSelect_Alerta(Connection connection) throws SQLException {
+
+		String args = "IN sp_"+ TABLE_ALERTA_COLLUMS[7] + " " + TABLE_ALERTA_DATATYPES[7];
+	    String statements = "SELECT * FROM " + TABLE_ALERTA_NAME + " WHERE sp_" + TABLE_ALERTA_COLLUMS[7] + " = " + TABLE_ALERTA_NAME +"."+ TABLE_ALERTA_COLLUMS[7];
+
+	    createStoredProcedure(connection, SP_SELECT_ALERTA_NAME, statements, args);
+	}
+
+	public static ResultSet callSPSelect_Alerta(Connection connection, int IdUtilizador) throws SQLException {
+		CallableStatement cst = connection.prepareCall("{call " + SP_SELECT_ALERTA_NAME +"(?)}");
+		cst.setInt(1,IdUtilizador);
+
+
+		return cst.executeQuery();
+	}
+
+	private static String argsForAlertas() {
 		String Variable_LimiteInferior_name = "alerta_Min";
 		String Variable_LimiteDangerZoneInferior_name = "alerta_Danger_Min";
 		String Variable_LimiteSuperior_name = "alerta_Max";
@@ -168,8 +262,7 @@ public class TableAlerta {
 
 		statementsLastAlerta += "\nSET " + lastAlertaIf_name + " = IFNULL(" + lastAlerta_name + ",'Healthy');";
 
-		String finalStatements =
-				"\n" + Variable_LimiteInferior
+		return "\n" + Variable_LimiteInferior
 				+"\n" + Variable_LimiteSuperior
 				+"\n" + Variable_LimiteDangerZoneInferior
 				+"\n" + Variable_LimiteDangerZoneSuperior
@@ -180,61 +273,5 @@ public class TableAlerta {
 				+"\n" + statementsLuz
 				+"\n" + statementsLastAlerta;
 
-
-		String insertDanger = CulturaSP.generateINSERTForAlerta("DangerZone");
-		String insertDeath = CulturaSP.generateINSERTForAlerta("DeathZone");
-		String insertNormal = CulturaSP.generateINSERTForAlerta("Healthy");
-
-		finalStatements += "\nIF " + lastAlertaIf_name + " != 'DangerZone' AND ((sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteDangerZoneInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteInferior_name  + ") OR (sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteDangerZoneSuperior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteSuperior_name + ")) THEN\n" + insertDanger + " ;END IF;";
-		finalStatements += "\nIF " + lastAlertaIf_name + " != 'DeathZone' AND (sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteInferior_name + " OR sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteSuperior_name + ") THEN\n" + insertDeath + " ;END IF;";
-		finalStatements += "\nIF " + lastAlertaIf_name + " != 'Healthy' AND (sp_" + TABLE_ALERTA_COLLUMS[4] + " >= " + Variable_LimiteDangerZoneInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " <= " + Variable_LimiteDangerZoneSuperior_name + ") THEN\n" + insertNormal + " ;END IF";
-
-	    createStoredProcedure(connection, SP_INSERIR_ALERTA_NAME, finalStatements, args);
-
-	}
-
-	public static void createSPAlterar_Alerta(Connection connection) throws SQLException {
-
-		String args = CulturaSP.generateARGUMENTS(TABLE_ALERTA_COLLUMS, TABLE_ALERTA_DATATYPES);
-
-
-	    String statements = "UPDATE " + TABLE_ALERTA_NAME + " SET " + TABLE_ALERTA_COLLUMS[1] + " = sp_" + TABLE_ALERTA_COLLUMS[1] +
-	            " ," + TABLE_ALERTA_COLLUMS[2] + " = sp_" + TABLE_ALERTA_COLLUMS[2] +
-	            " ," + TABLE_ALERTA_COLLUMS[3] + " = sp_" + TABLE_ALERTA_COLLUMS[3] +
-	            " ," + TABLE_ALERTA_COLLUMS[4] + " = sp_" + TABLE_ALERTA_COLLUMS[4] +
-	            " ," + TABLE_ALERTA_COLLUMS[5] + " = sp_" + TABLE_ALERTA_COLLUMS[5] +
-	            " ," + TABLE_ALERTA_COLLUMS[6] + " = sp_" + TABLE_ALERTA_COLLUMS[6] +
-	            " ," + TABLE_ALERTA_COLLUMS[7] + " = sp_" + TABLE_ALERTA_COLLUMS[7] +
-	            " ," + TABLE_ALERTA_COLLUMS[8] + " = sp_" + TABLE_ALERTA_COLLUMS[8] +
-	            " ," + TABLE_ALERTA_COLLUMS[9] + " = sp_" + TABLE_ALERTA_COLLUMS[9] +
-	            " ," + TABLE_ALERTA_COLLUMS[10] + " = sp_" + TABLE_ALERTA_COLLUMS[10] +
-	            " WHERE " + TABLE_ALERTA_COLLUMS[0] + " = sp_" + TABLE_ALERTA_COLLUMS[0];
-
-	    createStoredProcedure(connection, SP_ALTERAR_ALERTA_NAME, statements, args);
-
-	}
-
-	public static void createSPEliminar_Alerta(Connection connection) throws SQLException {
-
-		String args = "IN sp_Param VARCHAR(100)" + ", IN sp_ParamValue " + TABLE_ALERTA_DATATYPES[0];
-	    String statements = "DELETE FROM " + TABLE_ALERTA_NAME + " WHERE 'sp_Param' = sp_ParamValue";
-
-	    createStoredProcedure(connection, SP_ELIMINAR_ALERTA_NAME, statements, args);
-	}
-
-	public static void createSPSelect_Alerta(Connection connection) throws SQLException {
-
-		String args ="";// "IN sp_"+ TABLE_ALERTA_COLLUMS[7] + " " + TABLE_ALERTA_DATATYPES[7];
-	    String statements = "SELECT * FROM " + TABLE_ALERTA_NAME;// + " WHERE sp_" + TABLE_ALERTA_COLLUMS[7] + " = " + TABLE_ALERTA_NAME +"."+ TABLE_ALERTA_COLLUMS[7];
-
-	    createStoredProcedure(connection, SP_SELECT_ALERTA_NAME, statements, args);
-	}
-
-	public static ResultSet callSPSelect_Alerta(Connection connection, int IdUtilizador) throws SQLException {
-		CallableStatement cst = connection.prepareCall("{call " + SP_SELECT_ALERTA_NAME +"(?)}");
-		cst.setInt(1,IdUtilizador);
-
-
-		return cst.executeQuery();
 	}
 }
