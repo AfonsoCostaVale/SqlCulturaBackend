@@ -16,6 +16,10 @@ public class CulturaDB {
     /*
     TODO Verificar se o investigador está associado à cultura
     */
+    public static void main(String[] args) throws SQLException {
+        prepareCulturaDB();
+    }
+
 
     public static void prepareCulturaDB() throws SQLException {
         createDb(LOCAL_PATH_MYSQL, ROOTUSERNAME, ROOTPASSWORD, DB_NAME);
@@ -33,7 +37,8 @@ public class CulturaDB {
             createAllRoles(localConnection);
         }catch (Exception e){
             e.printStackTrace();
-            System.out.println( " Problems-exiting");
+            System.out.println( " Problems-trying again================================================");
+            prepareCulturaDB();
         }
     }
 
