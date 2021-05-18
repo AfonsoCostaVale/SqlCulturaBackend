@@ -140,7 +140,13 @@ public class TableAlerta {
 		String Variable_LimiteSuperior = "DECLARE " + Variable_LimiteSuperior_name + " " + TableParametroCultura.TABLE_PARAMETROCULTURA_DATATYPES[3] +";";
 		String Variable_LimiteDangerZoneSuperior = "DECLARE " + Variable_LimiteDangerZoneSuperior_name + " " + TableParametroCultura.TABLE_PARAMETROCULTURA_DATATYPES[9] +";";
 
+		String lastAlerta_name = "last_alerta";
+		String lastAlertaIf_name = "last_alertaIf";
+		String lastAlerta = "DECLARE " + lastAlerta_name + " " + TABLE_ALERTA_DATATYPES[10] +";";
+		String lastAlertaIf = "DECLARE " + lastAlertaIf_name + " " + TABLE_ALERTA_DATATYPES[10] +";";
+
 		String sensorType = "sp_" + TABLE_ALERTA_COLLUMS[5];
+		String sensorID = "sp_" + TABLE_ALERTA_COLLUMS[2];
 
 		String statementsHumidade = "IF " + sensorType + " = 'H' THEN\n" + "SELECT " + TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[2] + " INTO " + Variable_LimiteInferior_name + " FROM " + TableParametroCultura.TABLE_PARAMETROCULTURA_NAME + " WHERE " + TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[0] + " = sp_" + TABLE_ALERTA_COLLUMS[9] + ";\n"
 				+ "SELECT " + TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[3] + " INTO " + Variable_LimiteSuperior_name + " FROM " + TableParametroCultura.TABLE_PARAMETROCULTURA_NAME + " WHERE " + TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[0] + " = sp_" + TABLE_ALERTA_COLLUMS[9] + ";\n"
@@ -157,25 +163,31 @@ public class TableAlerta {
 				+ "SELECT " + TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[12] + " INTO " + Variable_LimiteDangerZoneInferior_name + " FROM " + TableParametroCultura.TABLE_PARAMETROCULTURA_NAME + " WHERE " + TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[0] + " = sp_" + TABLE_ALERTA_COLLUMS[9] + ";\n"
 				+ "SELECT " + TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[13] + " INTO " + Variable_LimiteDangerZoneSuperior_name + " FROM " + TableParametroCultura.TABLE_PARAMETROCULTURA_NAME + " WHERE " + TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[0] + " = sp_" + TABLE_ALERTA_COLLUMS[9] + "; END IF;";
 
+		String statementsLastAlerta = "SELECT " + TABLE_ALERTA_COLLUMS[10] + " INTO " + lastAlerta_name + " FROM " + TABLE_ALERTA_NAME
+				+ " WHERE " + TABLE_ALERTA_COLLUMS[2] + " = " + sensorID + " ORDER BY " + TABLE_ALERTA_COLLUMS[0] + " DESC LIMIT 1;";
 
+		statementsLastAlerta += "\nSET " + lastAlertaIf_name + " = IFNULL(" + lastAlerta_name + ",'Healthy');";
 
 		String finalStatements =
 				"\n" + Variable_LimiteInferior
 				+"\n" + Variable_LimiteSuperior
 				+"\n" + Variable_LimiteDangerZoneInferior
 				+"\n" + Variable_LimiteDangerZoneSuperior
+				+"\n" + lastAlerta
+				+"\n" + lastAlertaIf
 				+"\n" + statementsHumidade
 				+"\n" + statementsTemperatura
-				+"\n" + statementsLuz;
+				+"\n" + statementsLuz
+				+"\n" + statementsLastAlerta;
 
 
 		String insertDanger = CulturaSP.generateINSERTForAlerta("DangerZone");
 		String insertDeath = CulturaSP.generateINSERTForAlerta("DeathZone");
 		String insertNormal = CulturaSP.generateINSERTForAlerta("Healthy");
 
-		finalStatements += "\nIF (sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteDangerZoneInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteInferior_name  + ") OR (sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteDangerZoneSuperior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteSuperior_name + ") THEN\n" + insertDanger + " ;END IF;";
-		finalStatements += "\nIF sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteInferior_name + " OR sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteSuperior_name + " THEN\n" + insertDeath + " ;END IF;";
-		finalStatements += "\nIF sp_" + TABLE_ALERTA_COLLUMS[4] + " >= " + Variable_LimiteDangerZoneInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " <= " + Variable_LimiteDangerZoneSuperior_name + " THEN\n" + insertNormal + " ;END IF";
+		finalStatements += "\nIF " + lastAlertaIf_name + " != 'DangerZone' AND ((sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteDangerZoneInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteInferior_name  + ") OR (sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteDangerZoneSuperior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteSuperior_name + ")) THEN\n" + insertDanger + " ;END IF;";
+		finalStatements += "\nIF " + lastAlertaIf_name + " != 'DeathZone' AND (sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteInferior_name + " OR sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteSuperior_name + ") THEN\n" + insertDeath + " ;END IF;";
+		finalStatements += "\nIF " + lastAlertaIf_name + " != 'Healthy' AND (sp_" + TABLE_ALERTA_COLLUMS[4] + " >= " + Variable_LimiteDangerZoneInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " <= " + Variable_LimiteDangerZoneSuperior_name + ") THEN\n" + insertNormal + " ;END IF";
 
 	    createStoredProcedure(connection, SP_INSERIR_ALERTA_NAME, finalStatements, args);
 

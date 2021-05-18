@@ -305,4 +305,10 @@ public class CulturaDB {
         return result.get(0);
     }
 
+    //For Array of last medicoes in MQTTReader
+    public static double getLastMedicao(Connection connection) throws SQLException {
+        String leitura = (String) getLatestEntryFromTable(connection,TableMedicao.TABLE_MEDICAO_NAME,TableMedicao.TABLE_MEDICAO_COLLUMS[4]);
+        return Double.parseDouble(leitura);
+    }
+
 }
