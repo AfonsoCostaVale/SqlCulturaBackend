@@ -33,6 +33,7 @@ public class CulturaSP {
 	    TableCultura.createSPInserir_Cultura                     (connection);
 	    TableCultura.createSPAlterar_Cultura                     (connection);
 	    TableCultura.createSPEliminar_Cultura                    (connection);
+	    TableCultura.createSPSelect_Cultura                      (connection);
 
 	  //  TableParametroCultura.createSPInserir_ParametroCultura   (connection);
 	    TableParametroCultura.createSPAlterar_ParametroCultura   (connection);

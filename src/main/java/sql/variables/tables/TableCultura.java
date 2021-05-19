@@ -1,8 +1,11 @@
 package sql.variables.tables;
 
 import sql.CulturaSP;
+import sql.SqlController;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 
@@ -73,6 +76,7 @@ public class TableCultura {
 	public static final String SP_INSERIR_CULTURA_NAME              = "Inserir_Cultura";
 	public static final String SP_ALTERAR_CULTURA_NAME              = "Alterar_Cultura";
 	public static final String SP_ELIMINAR_CULTURA_NAME             = "Eliminar_Cultura";
+	public static final String SP_SELECT_CULTURA_NAME               = "Selecionar_Cultura";
 
 	public static void createSPInserir_Cultura(Connection connection) throws SQLException {
 
@@ -130,5 +134,17 @@ public class TableCultura {
 	    String statements = "DELETE FROM " + TABLE_CULTURA_NAME + " WHERE 'sp_Param' = sp_ParamValue";
 
 	    createStoredProcedure(connection, SP_ELIMINAR_CULTURA_NAME, statements, args);
+	}
+
+	public static void createSPSelect_Cultura(Connection connection) throws SQLException {
+		String args ="";// "IN sp_"+ TABLE_ALERTA_COLLUMS[7] + " " + TABLE_ALERTA_DATATYPES[7];
+		String statements = "SELECT * FROM " + TABLE_CULTURA_NAME;// + " WHERE sp_" + TABLE_ALERTA_COLLUMS[7] + " = " + TABLE_ALERTA_NAME +"."+ TABLE_ALERTA_COLLUMS[7];
+		createStoredProcedure(connection, SP_SELECT_CULTURA_NAME, statements, args);
+	}
+
+	public static ResultSet callSPSelect_Cultura(Connection connection, int IdUtilizador) throws SQLException {
+		CallableStatement cst = connection.prepareCall("{call Selecionar_Cultura(?)}");
+		cst.setInt(1, IdUtilizador);
+		return cst.executeQuery();
 	}
 }

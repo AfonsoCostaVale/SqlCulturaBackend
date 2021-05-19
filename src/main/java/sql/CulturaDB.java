@@ -153,6 +153,7 @@ public class CulturaDB {
         //Stored Procedures
         grantPermissionRole(connection, TableUtilizador.ROLE_INVESTIGADOR,"EXECUTE", TableParametroCultura.SP_ALTERAR_PARAMETRO_CULTURA_NAME,true);
         grantPermissionRole(connection, TableUtilizador.ROLE_INVESTIGADOR,"EXECUTE", TableAlerta.SP_SELECT_ALERTA_NAME,true);
+        grantPermissionRole(connection, TableUtilizador.ROLE_INVESTIGADOR,"EXECUTE", TableCultura.SP_SELECT_CULTURA_NAME,true);
 
     }
 
