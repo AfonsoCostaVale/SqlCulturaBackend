@@ -208,7 +208,7 @@ public class TableAlerta {
 	}
 
 	public static void createSPSelect_Alerta(Connection connection) throws SQLException {
-
+//TODO implementar date
 		String args ="IN sp_"+ TableUtilizador.TABLE_UTILIZADOR_COLLUMS[2] + " " + TableUtilizador.TABLE_UTILIZADOR_DATATYPES[2];
 		String statements = "SELECT "
 				+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[1] + ", "

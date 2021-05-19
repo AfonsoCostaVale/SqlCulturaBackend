@@ -42,7 +42,7 @@ public class TableUtilizador {
 	 * <p>TABLE_UTILIZADOR_PARAMS</p>
 	 * <ul>
 	 *     <li>[0]NOT NULL PRIMARY KEY AUTO_INCREMENT UNIQUE -IdUtilizador      </li>
-	 *     <li>[1]NOT NULL -NomeInvestigador    </li>
+	 *     <li>[1]NOT NULL UNIQUE -NomeInvestigador    </li>
 	 *     <li>[2]NOT NULL -EmailUtilizador     </li>
 	 *     <li>[3]NOT NULL -Password            </li>
 	 *     <li>[4]NOT NULL -TipoUtilizador      </li>
@@ -50,7 +50,7 @@ public class TableUtilizador {
 	 */
 	public static final String[] TABLE_UTILIZADOR_PARAMS = {
 	          "NOT NULL PRIMARY KEY AUTO_INCREMENT UNIQUE"      //IdUtilizador
-	        , "NOT NULL"                                        //NomeInvestigador
+	        , "NOT NULL UNIQUE"                                 //NomeInvestigador
 	        , "NOT NULL"                                        //EmailUtilizador
 	        , "NOT NULL"                                        //Password
 	        , "NOT NULL"                                        //TipoUtilizador
@@ -69,10 +69,10 @@ public class TableUtilizador {
 	public static final String SP_ALTERAR_USER_NAME                 = "Alterar_User";
 	public static final String SP_ELIMINAR_USER_NAME                = "Eliminar_User";
 	//Roles for Application
-	public static final String ROLE_INVESTIGADOR = "Investigador";
-	public static final String ROLE_TECNICO = "Tecnico";
-	public static final String ROLE_ADMIN = "Admin";
-	public static final String ROLE_MQTTREADER = "MqttReader";
+	public static final String ROLE_INVESTIGADOR     = "Investigador";
+	public static final String ROLE_TECNICO          = "Tecnico";
+	public static final String ROLE_ADMIN            = "Admin";
+	public static final String ROLE_MQTTREADER       = "MqttReader";
 
 
 	private static String[] createSPInserir_User_Base(String role) {
@@ -82,20 +82,20 @@ public class TableUtilizador {
 	    );
 		String statements = CulturaSP.generateINSERTForUser(role);
 
-	    String create = "SET @query = CONCAT('CREATE USER \"', sp_"+ TABLE_UTILIZADOR_COLLUMS[2]+
+	    String create = "SET @query = CONCAT('CREATE USER \"', sp_"+ TABLE_UTILIZADOR_COLLUMS[1]+
 				", '\"@\"', 'localhost', '\" IDENTIFIED BY \"', sp_"+ TABLE_UTILIZADOR_COLLUMS[3]+", '\";');\n" +
 				"PREPARE stmt FROM @query;\n" +
 				"EXECUTE stmt;\n" +
 				"DEALLOCATE PREPARE stmt;";
 
 	    String addRole = "SET @query = CONCAT('GRANT \"', '"+role+
-				"', '\" TO \"', sp_"+ TABLE_UTILIZADOR_COLLUMS[2]+", '\"@\"', 'localhost', '\";');\n" +
+				"', '\" TO \"', sp_"+ TABLE_UTILIZADOR_COLLUMS[1]+", '\"@\"', 'localhost', '\";');\n" +
 				"PREPARE stmt FROM @query;\n" +
 				"EXECUTE stmt;\n" +
 				"DEALLOCATE PREPARE stmt;";
 
 	    String setDefaultRole = "SET @query = CONCAT('SET DEFAULT ROLE \"', '"+role+
-				"', '\" FOR \"', sp_"+ TABLE_UTILIZADOR_COLLUMS[2]+", '\"@\"', 'localhost', '\";');\n" +
+				"', '\" FOR \"', sp_"+ TABLE_UTILIZADOR_COLLUMS[1]+", '\"@\"', 'localhost', '\";');\n" +
 				"PREPARE stmt FROM @query;\n" +
 				"EXECUTE stmt;\n" +
 				"DEALLOCATE PREPARE stmt";
