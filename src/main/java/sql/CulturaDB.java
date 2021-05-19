@@ -326,13 +326,6 @@ public class CulturaDB {
     }
 
     //For Array of last medicoes in MQTTReader
-    public static double getLastLeitura(Connection connection) throws SQLException {
-        String leitura = (String) getLatestEntryFromTable(connection,TableMedicao.TABLE_MEDICAO_NAME,TableMedicao.TABLE_MEDICAO_COLLUMS[4]);
-        if(!leitura.equals(""))
-            return Double.parseDouble(leitura);
-        return 0;
-    }
-
     public static ArrayList<String> getLastMedicao(Connection connection) throws SQLException {
         if(didItGoThrough(connection,lastMedicao))
             return lastMedicao;

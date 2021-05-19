@@ -274,7 +274,7 @@ public class TableAlerta {
 				+ "SELECT " + TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[13] + " INTO " + Variable_LimiteDangerZoneSuperior_name + " FROM " + TableParametroCultura.TABLE_PARAMETROCULTURA_NAME + " WHERE " + TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[0] + " = sp_" + TABLE_ALERTA_COLLUMS[9] + "; END IF;";
 
 		String statementsLastAlerta = "SELECT " + TABLE_ALERTA_COLLUMS[10] + " INTO " + lastAlerta_name + " FROM " + TABLE_ALERTA_NAME
-				+ " WHERE " + TABLE_ALERTA_COLLUMS[2] + " = " + sensorID + " ORDER BY " + TABLE_ALERTA_COLLUMS[0] + " DESC LIMIT 1;";
+				+ " WHERE " + TABLE_ALERTA_COLLUMS[2] + " = " + sensorID + " ORDER BY " + TABLE_ALERTA_COLLUMS[3] + " DESC, " + TABLE_ALERTA_COLLUMS[0] + " DESC LIMIT 1;";
 
 		statementsLastAlerta += "\nSET " + lastAlertaIf_name + " = IFNULL(" + lastAlerta_name + ",'Healthy');";
 

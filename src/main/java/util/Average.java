@@ -13,12 +13,11 @@ public class Average {
     }
 
     public void putValue(double value){
-        average = (average + value)/size;
-        size++;
-
         if(size == 1000){
-            average /= size;
-            size = 1;
+            average = (average / size-1 ) + ( value / size);
+        } else {
+            average = (average + value)/size;
+            size++;
         }
     }
 
@@ -28,5 +27,9 @@ public class Average {
 
     public int getId() {
         return id;
+    }
+
+    public double getSize() {
+        return size;
     }
 }
