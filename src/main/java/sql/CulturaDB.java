@@ -17,29 +17,30 @@ public class CulturaDB {
     TODO Verificar se o investigador está associado à cultura
     */
     public static void main(String[] args) throws SQLException {
-        prepareCulturaDB();
+        try {
+            prepareCulturaDB();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            System.out.println("Trying again");
+            prepareCulturaDB();
+        }
     }
 
 
     public static void prepareCulturaDB() throws SQLException {
         createDb(LOCAL_PATH_MYSQL, ROOTUSERNAME, ROOTPASSWORD, DB_NAME);
 
-        try(Connection localConnection = connectDb(LOCAL_PATH_DB, ROOTUSERNAME, ROOTPASSWORD)){
-            dropAllTablesDbCultura(localConnection);
-            try{
-                Connection cloudConnection = connectDb(CLOUD_PATH_DB, CLOUD_USERNAME, CLOUD_PASSWORD);
-                createAllTablesDbCultura(localConnection, cloudConnection);
-            }catch (Exception e){
-                System.out.println("Cannot connect to cloud, ignoring cloud DB");
-                createAllTablesDbCultura(localConnection);
-            }
-            CulturaSP.createAllSP(localConnection);
-            createAllRoles(localConnection);
+        Connection localConnection = connectDb(LOCAL_PATH_DB, ROOTUSERNAME, ROOTPASSWORD);
+        dropAllTablesDbCultura(localConnection);
+        try{
+            Connection cloudConnection = connectDb(CLOUD_PATH_DB, CLOUD_USERNAME, CLOUD_PASSWORD);
+            createAllTablesDbCultura(localConnection, cloudConnection);
         }catch (Exception e){
-            e.printStackTrace();
-            System.out.println( " Problems-trying again================================================");
-            prepareCulturaDB();
+            System.out.println("Cannot connect to cloud, ignoring cloud DB");
+            createAllTablesDbCultura(localConnection);
         }
+        CulturaSP.createAllSP(localConnection);
+        createAllRoles(localConnection);
     }
 
     public static Connection getLocalConnection() throws SQLException {
