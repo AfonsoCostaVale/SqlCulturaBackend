@@ -112,7 +112,7 @@ public class CulturaSP {
 		for (String value :
 				Arrays.copyOfRange(TableUtilizador.TABLE_UTILIZADOR_COLLUMS,
 						1, TableUtilizador.TABLE_UTILIZADOR_COLLUMS.length)) {
-			if(!value.equals(TableUtilizador.TABLE_UTILIZADOR_COLLUMS[4]))
+			if(!value.equals(TableUtilizador.TABLE_UTILIZADOR_COLLUMS[3]))
 				insertString += " sp_" + value + ",";
 			else
 				insertString += " '" + role + "',";
