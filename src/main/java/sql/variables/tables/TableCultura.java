@@ -52,7 +52,7 @@ public class TableCultura {
 	 * <ul>
 	 *     <li>[0]NOT NULL PRIMARY KEY AUTO_INCREMENT UNIQUE    - IdCultura     </li>
 	 *     <li>[1]NOT NULL UNIQUE                               - NomeCultura   </li>
-	 *     <li>[2]NOT NULL                                      - IdUtilizador  </li>
+	 *     <li>[2]                                              - IdUtilizador  </li>
 	 *     <li>[3]NOT NULL                                      - Estado        </li>
 	 *     <li>[4]NOT NULL                                      - IdZona        </li>
 	 * </ul>
@@ -60,7 +60,7 @@ public class TableCultura {
 	public static final String[] TABLE_CULTURA_PARAMS = {
 	          "NOT NULL PRIMARY KEY AUTO_INCREMENT UNIQUE"  //IdCultura
 	        , "NOT NULL UNIQUE"                             //NomeCultura
-	        , "NOT NULL"                                    //IdUtilizador
+	        , ""                                            //IdUtilizador
 	        , "NOT NULL"                                    //Estado
 	        , "NOT NULL"                                    //IdZona
 	};
