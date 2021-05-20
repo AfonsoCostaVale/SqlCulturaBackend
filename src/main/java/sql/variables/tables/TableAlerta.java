@@ -138,15 +138,22 @@ public class TableAlerta {
 
 		String lastAlertaIf_name = "last_alertaIf";
 
+		String lastAlertaDangerDate_name = "last_Dangerdate";
+		String lastAlertaDeathDate_name = "last_Deathdate";
+
+		//String compareAlertaTimes = "select time_to_sec(timediff(sp_" + TABLE_ALERTA_COLLUMS[8] + ", " + lastAlertaDate_name + " )) / 3600 > ;";
+
 		String finalStatements = argsForAlertas();
 
 		String insertDanger = CulturaSP.generateINSERTForAlerta("DangerZone");
 		String insertDeath = CulturaSP.generateINSERTForAlerta("DeathZone");
 		String insertNormal = CulturaSP.generateINSERTForAlerta("Healthy");
 
-		finalStatements += "\nIF " + lastAlertaIf_name + " != 'DangerZone' AND ((sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteDangerZoneInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteInferior_name  + ") OR (sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteDangerZoneSuperior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteSuperior_name + ")) THEN\n" + insertDanger + " ;END IF;";
-		finalStatements += "\nIF " + lastAlertaIf_name + " != 'DeathZone' AND (sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteInferior_name + " OR sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteSuperior_name + ") THEN\n" + insertDeath + " ;END IF;";
-		finalStatements += "\nIF " + lastAlertaIf_name + " != 'Healthy' AND (sp_" + TABLE_ALERTA_COLLUMS[4] + " >= " + Variable_LimiteDangerZoneInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " <= " + Variable_LimiteDangerZoneSuperior_name + ") THEN\n" + insertNormal + " ;END IF";
+		finalStatements += "\nIF ((select time_to_sec(timediff(sp_" + TABLE_ALERTA_COLLUMS[8] + ", " + lastAlertaDangerDate_name + ")) / 3600 > 0.1) OR " + lastAlertaIf_name + " <> 'DangerZone')" +
+				" AND ((sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteDangerZoneInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteInferior_name  + ") OR (sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteDangerZoneSuperior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteSuperior_name + ")) THEN\n" + insertDanger + " ;END IF;";
+		finalStatements += "\nIF ((select time_to_sec(timediff(sp_" + TABLE_ALERTA_COLLUMS[8] + ", " + lastAlertaDeathDate_name + ")) / 3600 > 0.1) OR " + lastAlertaIf_name + " <> 'DeathZone')" +
+				" AND (sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteInferior_name + " OR sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteSuperior_name + ") THEN\n" + insertDeath + " ;END IF;";
+		finalStatements += "\nIF " + lastAlertaIf_name + " <> 'Healthy' AND (sp_" + TABLE_ALERTA_COLLUMS[4] + " >= " + Variable_LimiteDangerZoneInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " <= " + Variable_LimiteDangerZoneSuperior_name + ") THEN\n" + insertNormal + " ;END IF";
 
 	    createStoredProcedure(connection, SP_INSERIR_ALERTA_NAME, finalStatements, args);
 
@@ -165,15 +172,18 @@ public class TableAlerta {
 
 		String lastAlertaIf_name = "last_alertaIf";
 
+		String lastAlertaAproachIf_name = "last_alerta_aproachIf";
+
 		String finalStatements = argsForAlertas();
 
 		String insertDanger = CulturaSP.generateINSERTForAlerta("Aproaching DangerZone...");
 		String insertDeath = CulturaSP.generateINSERTForAlerta("Aproaching DeathZone...");
 		String insertNormal = CulturaSP.generateINSERTForAlerta("Aproaching Healthy...");
+		//((select time_to_sec(timediff(sp_" + TABLE_ALERTA_COLLUMS[8] + ", " + lastAlertaDeathDate_name + ")) / 3600 > 0.01)
 
-		finalStatements += "\nIF " + lastAlertaIf_name + " != 'Aproaching DangerZone...' AND " + lastAlertaIf_name + " !='DangerZone' AND ((sp_PredictedValue < " + Variable_LimiteDangerZoneInferior_name + " AND sp_PredictedValue > " + Variable_LimiteInferior_name  + ") OR (sp_PredictedValue > " + Variable_LimiteDangerZoneSuperior_name + " AND sp_PredictedValue < " + Variable_LimiteSuperior_name + ")) THEN\n" + insertDanger + " ;END IF;";
-		finalStatements += "\nIF " + lastAlertaIf_name + " != 'Aproaching DeathZone...' AND " + lastAlertaIf_name + " !='DeathZone' AND (sp_PredictedValue < " + Variable_LimiteInferior_name + " OR sp_PredictedValue > " + Variable_LimiteSuperior_name + ") THEN\n" + insertDeath + " ;END IF;";
-		finalStatements += "\nIF " + lastAlertaIf_name + " != 'Aproaching Healthy...' AND " + lastAlertaIf_name + " !='Healthy' AND (sp_PredictedValue >= " + Variable_LimiteDangerZoneInferior_name + " AND sp_PredictedValue <= " + Variable_LimiteDangerZoneSuperior_name + ") THEN\n" + insertNormal + " ;END IF";
+		finalStatements += "\nIF (" + lastAlertaAproachIf_name + " <> 'Aproaching DangerZone...' AND " + lastAlertaIf_name + " <> 'DangerZone') AND ((sp_PredictedValue < " + Variable_LimiteDangerZoneInferior_name + " AND sp_PredictedValue > " + Variable_LimiteInferior_name  + ") OR (sp_PredictedValue > " + Variable_LimiteDangerZoneSuperior_name + " AND sp_PredictedValue < " + Variable_LimiteSuperior_name + ")) THEN\n" + insertDanger + " ;END IF;";
+		finalStatements += "\nIF (" + lastAlertaAproachIf_name + " <> 'Aproaching DeathZone...' AND " + lastAlertaIf_name + " <> 'DeathZone') AND (sp_PredictedValue < " + Variable_LimiteInferior_name + " OR sp_PredictedValue > " + Variable_LimiteSuperior_name + ") THEN\n" + insertDeath + " ;END IF;";
+		finalStatements += "\nIF (" + lastAlertaAproachIf_name + " <> 'Aproaching Healthy...' AND " + lastAlertaIf_name + " <> 'Healthy') AND (sp_PredictedValue >= " + Variable_LimiteDangerZoneInferior_name + " AND sp_PredictedValue <= " + Variable_LimiteDangerZoneSuperior_name + ") THEN\n" + insertNormal + " ;END IF";
 
 		createStoredProcedure(connection, SP_INSERIR_ALERTA_PREDICTED_NAME, finalStatements, args);
 	}
@@ -251,9 +261,18 @@ public class TableAlerta {
 		String Variable_LimiteDangerZoneSuperior = "DECLARE " + Variable_LimiteDangerZoneSuperior_name + " " + TableParametroCultura.TABLE_PARAMETROCULTURA_DATATYPES[9] +";";
 
 		String lastAlerta_name = "last_alerta";
+		String lastAlertaAproach_name = "last_alerta_aproach";
 		String lastAlertaIf_name = "last_alertaIf";
+		String lastAlertaAproachIf_name = "last_alerta_aproachIf";
 		String lastAlerta = "DECLARE " + lastAlerta_name + " " + TABLE_ALERTA_DATATYPES[10] +";";
+		String lastAlertaAproach = "DECLARE " + lastAlertaAproach_name + " " + TABLE_ALERTA_DATATYPES[10] +";";
 		String lastAlertaIf = "DECLARE " + lastAlertaIf_name + " " + TABLE_ALERTA_DATATYPES[10] +";";
+		String lastAlertaAproachIf = "DECLARE " + lastAlertaAproachIf_name + " " + TABLE_ALERTA_DATATYPES[10] +";";
+
+		String lastAlertaDangerDate_name = "last_Dangerdate";
+		String lastAlertaDeathDate_name = "last_Deathdate";
+		String lastAlertaDangerDate = "DECLARE " + lastAlertaDangerDate_name + " " + TABLE_ALERTA_DATATYPES[8] +";";
+		String lastAlertaDeathDate = "DECLARE " + lastAlertaDeathDate_name + " " + TABLE_ALERTA_DATATYPES[8] +";";
 
 		String sensorType = "sp_" + TABLE_ALERTA_COLLUMS[5];
 		String sensorID = "sp_" + TABLE_ALERTA_COLLUMS[2];
@@ -274,16 +293,35 @@ public class TableAlerta {
 				+ "SELECT " + TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[13] + " INTO " + Variable_LimiteDangerZoneSuperior_name + " FROM " + TableParametroCultura.TABLE_PARAMETROCULTURA_NAME + " WHERE " + TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[0] + " = sp_" + TABLE_ALERTA_COLLUMS[9] + "; END IF;";
 
 		String statementsLastAlerta = "SELECT " + TABLE_ALERTA_COLLUMS[10] + " INTO " + lastAlerta_name + " FROM " + TABLE_ALERTA_NAME
-				+ " WHERE " + TABLE_ALERTA_COLLUMS[2] + " = " + sensorID + " ORDER BY " + TABLE_ALERTA_COLLUMS[3] + " DESC, " + TABLE_ALERTA_COLLUMS[0] + " DESC LIMIT 1;";
+				+ " WHERE " + TABLE_ALERTA_COLLUMS[2] + " = " + sensorID + " AND " + TABLE_ALERTA_COLLUMS[10] + " <> 'Aproaching DangerZone...' AND " +
+				TABLE_ALERTA_COLLUMS[10] + " <> 'Aproaching DeathZone...' AND " + TABLE_ALERTA_COLLUMS[10] + " <> 'Aproaching Healthy...'" +
+				" ORDER BY " + TABLE_ALERTA_COLLUMS[0] + " DESC LIMIT 1;";
+
+		statementsLastAlerta += "SELECT " + TABLE_ALERTA_COLLUMS[10] + " INTO " + lastAlertaAproach_name + " FROM " + TABLE_ALERTA_NAME
+				+ " WHERE " + TABLE_ALERTA_COLLUMS[2] + " = " + sensorID + " AND " + TABLE_ALERTA_COLLUMS[10] + " <> 'DangerZone' AND " +
+				TABLE_ALERTA_COLLUMS[10] + " <> 'DeathZone' AND " + TABLE_ALERTA_COLLUMS[10] + " <> 'Healthy'" +
+				" ORDER BY " + TABLE_ALERTA_COLLUMS[0] + " DESC LIMIT 1;";
+
+		statementsLastAlerta += "SELECT " + TABLE_ALERTA_COLLUMS[8] + " INTO " + lastAlertaDangerDate_name + " FROM " + TABLE_ALERTA_NAME
+				+ " WHERE " + TABLE_ALERTA_COLLUMS[2] + " = " + sensorID + " AND " + TABLE_ALERTA_COLLUMS[10] + " = 'DangerZone' ORDER BY " + TABLE_ALERTA_COLLUMS[0] + " DESC LIMIT 1;";
+
+		statementsLastAlerta += "SELECT " + TABLE_ALERTA_COLLUMS[8] + " INTO " + lastAlertaDeathDate_name + " FROM " + TABLE_ALERTA_NAME
+				+ " WHERE " + TABLE_ALERTA_COLLUMS[2] + " = " + sensorID+ " AND " + TABLE_ALERTA_COLLUMS[10] + " = 'DeathZone' ORDER BY " + TABLE_ALERTA_COLLUMS[0] + " DESC LIMIT 1;";
 
 		statementsLastAlerta += "\nSET " + lastAlertaIf_name + " = IFNULL(" + lastAlerta_name + ",'Healthy');";
+
+		statementsLastAlerta += "\nSET " + lastAlertaAproachIf_name + " = IFNULL(" + lastAlertaAproach_name + ",'Aproaching Healthy...');";
 
 		return "\n" + Variable_LimiteInferior
 				+"\n" + Variable_LimiteSuperior
 				+"\n" + Variable_LimiteDangerZoneInferior
 				+"\n" + Variable_LimiteDangerZoneSuperior
 				+"\n" + lastAlerta
+				+"\n" + lastAlertaAproach
 				+"\n" + lastAlertaIf
+				+"\n" + lastAlertaAproachIf
+				+"\n" + lastAlertaDangerDate
+				+"\n" + lastAlertaDeathDate
 				+"\n" + statementsHumidade
 				+"\n" + statementsTemperatura
 				+"\n" + statementsLuz
