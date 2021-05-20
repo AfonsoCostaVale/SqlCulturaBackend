@@ -1,6 +1,7 @@
 package sql;
 
 import sql.variables.tables.*;
+import util.Average;
 import util.Pair;
 
 import java.sql.Connection;
@@ -206,7 +207,7 @@ public class CulturaDB {
     }
     
     public static void insertMedicao(String medicao, Connection connection) throws SQLException {
-        lastMedicao = new ArrayList<>();
+        if(lastMedicao == null) { lastMedicao = new ArrayList<>(); }
         ArrayList<String> values = new ArrayList<>();
         String[] splitData = medicao.split(",");
         String idSensor = "";
@@ -246,7 +247,7 @@ public class CulturaDB {
         String[] valuesToArray = new String[values.size()];
         valuesToArray = values.toArray(valuesToArray);
         callStoredProcedure(connection, TableMedicao.SP_INSERIR_MEDICAO_NAME, valuesToArray);
-        lastMedicao = values;
+        addCollection(Integer.parseInt(idSensor),values);
         checkForAlerta(connection, values, false);
     }
 
@@ -266,7 +267,7 @@ public class CulturaDB {
            return true;
     }
 
-    private static ArrayList<String> lastMedicao;
+    private static ArrayList<Pair<Integer,ArrayList<String>>> lastMedicao;
 
     public static void checkForAlerta(Connection connection, ArrayList<String> values, boolean isItPredicted) throws SQLException {
         if(!isItPredicted) {
@@ -327,9 +328,47 @@ public class CulturaDB {
     }
 
     //For Array of last medicoes in MQTTReader
-    public static ArrayList<String> getLastMedicao(Connection connection) throws SQLException {
-        if(didItGoThrough(connection,lastMedicao))
-            return lastMedicao;
+    public static ArrayList<String> getLastMedicaoWithId(Connection connection, int id) throws SQLException {
+        if(didItGoThrough(connection,lastMedicao.get(indexOfCollection(id)).getB()))
+            return lastMedicao.get(indexOfCollection(id)).getB();
         return new ArrayList<>();
+    }
+
+    public static int getSensorId (Connection connection, String doc) throws SQLException {
+        String[] splitData = doc.split(",");
+        String idSensor = "";
+        for (String data : splitData) {
+            String[] datavalues = data.trim().split("=");
+            switch (datavalues[0]) {
+                case SENSOR: {
+                    ArrayList<Pair> paramValues = new ArrayList<>();
+                    paramValues.add(new Pair<>(TableSensor.TABLE_SENSOR_COLLUMS[1], datavalues[1].charAt(0)));
+                    paramValues.add(new Pair<>(TableSensor.TABLE_SENSOR_COLLUMS[2], datavalues[1].charAt(1)));
+                    idSensor = (String) SqlController.getElementsFromDbTable(connection, TableSensor.TABLE_SENSOR_NAME, TableSensor.TABLE_SENSOR_COLLUMS[0],
+                            paramValues);
+                    break;
+                }
+                default: {
+
+                }
+            }
+        }
+        return Integer.parseInt(idSensor);
+    }
+
+    private static void addCollection(int collection,ArrayList<String> medicao) {
+        for (Pair<Integer, ArrayList<String>> col : lastMedicao) {
+            if(col.getA() == collection)
+                lastMedicao.set(indexOfCollection(collection),new Pair<>(collection,medicao));
+        }
+        lastMedicao.add(new Pair<>(collection,medicao));
+    }
+
+    private static int indexOfCollection (int collection) {
+        for (Pair<Integer, ArrayList<String>> col : lastMedicao) {
+            if(col.getA() == collection)
+                return lastMedicao.indexOf(col);
+        }
+        return 0;
     }
 }
