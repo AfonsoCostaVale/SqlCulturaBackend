@@ -52,7 +52,7 @@ public class TableCultura {
 	 * <ul>
 	 *     <li>[0]NOT NULL PRIMARY KEY AUTO_INCREMENT UNIQUE    - IdCultura     </li>
 	 *     <li>[1]NOT NULL UNIQUE                               - NomeCultura   </li>
-	 *     <li>[2]NOT NULL                                      - IdUtilizador  </li>
+	 *     <li>[2]                                              - IdUtilizador  </li>
 	 *     <li>[3]NOT NULL                                      - Estado        </li>
 	 *     <li>[4]NOT NULL                                      - IdZona        </li>
 	 * </ul>
@@ -60,9 +60,9 @@ public class TableCultura {
 	public static final String[] TABLE_CULTURA_PARAMS = {
 	          "NOT NULL PRIMARY KEY AUTO_INCREMENT UNIQUE"  //IdCultura
 	        , "NOT NULL UNIQUE"                             //NomeCultura
-	        , "NOT NULL"                                    //IdUtilizador
+	        , "NULL DEFAULT NULL"                           //IdUtilizador
 	        , "NOT NULL"                                    //Estado
-	        , "NOT NULL"                                    //IdZona
+	        , "NULL DEFAULT NULL"                           //IdZona
 	};
 	public static final String[] TABLE_CULTURA = {
 	        TABLE_CULTURA_COLLUMS[0] + " " + TABLE_CULTURA_DATATYPES[0] + " " + TABLE_CULTURA_PARAMS[0] ,
@@ -70,8 +70,8 @@ public class TableCultura {
 	        TABLE_CULTURA_COLLUMS[2] + " " + TABLE_CULTURA_DATATYPES[2] + " " + TABLE_CULTURA_PARAMS[2] ,
 	        TABLE_CULTURA_COLLUMS[3] + " " + TABLE_CULTURA_DATATYPES[3] + " " + TABLE_CULTURA_PARAMS[3]	,
 	        TABLE_CULTURA_COLLUMS[4] + " " + TABLE_CULTURA_DATATYPES[4] + " " + TABLE_CULTURA_PARAMS[4]	,
-	        "CONSTRAINT FK_" + TABLE_CULTURA_COLLUMS[2] + " FOREIGN KEY (" + TABLE_CULTURA_COLLUMS[2] + ") REFERENCES " + TableUtilizador.TABLE_UTILIZADOR_NAME + "(" + TABLE_CULTURA_COLLUMS[2] + ")",
-	        "CONSTRAINT FK4_" + TABLE_CULTURA_COLLUMS[4] + " FOREIGN KEY (" + TABLE_CULTURA_COLLUMS[4] + ") REFERENCES " + TableZona.TABLE_ZONA_NAME + "(" + TABLE_CULTURA_COLLUMS[4] + ")"
+	        "CONSTRAINT FK_" + TABLE_CULTURA_COLLUMS[2] + " FOREIGN KEY (" + TABLE_CULTURA_COLLUMS[2] + ") REFERENCES " + TableUtilizador.TABLE_UTILIZADOR_NAME + "(" + TABLE_CULTURA_COLLUMS[2] + ") ON UPDATE CASCADE ON DELETE SET NULL ",
+	        "CONSTRAINT FK4_" + TABLE_CULTURA_COLLUMS[4] + " FOREIGN KEY (" + TABLE_CULTURA_COLLUMS[4] + ") REFERENCES " + TableZona.TABLE_ZONA_NAME + "(" + TABLE_CULTURA_COLLUMS[4] + ") ON UPDATE CASCADE ON DELETE SET NULL "
 	};
 	public static final String SP_INSERIR_CULTURA_NAME              = "Inserir_Cultura";
 	public static final String SP_ALTERAR_CULTURA_NAME              = "Alterar_Cultura";
@@ -97,7 +97,7 @@ public class TableCultura {
 		System.arraycopy(argsParametrosType,0,argsForBothType,argsCulturaType.length,argsParametrosType.length);
 
 		String args = CulturaSP.generateARGUMENTS(argsForBoth, argsForBothType);
-
+		//String ifUserisNull = "IF sp_"+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[0] + " IS NULL THEN " + ;
 	    String statements = CulturaSP.generateINSERT(TABLE_CULTURA_NAME, argsCultura)+";";
 
 	   String culturaID_name = "idForCultura";
@@ -141,6 +141,18 @@ public class TableCultura {
 		String statements = "SELECT * FROM " + TABLE_CULTURA_NAME;// + " WHERE sp_" + TABLE_ALERTA_COLLUMS[7] + " = " + TABLE_ALERTA_NAME +"."+ TABLE_ALERTA_COLLUMS[7];
 		createStoredProcedure(connection, SP_SELECT_CULTURA_NAME, statements, args);
 	}
+	/*public static void createSPAtribuirUtilizadorCultura(Connection connection) throws SQLException {
+		String args ="IN sp_"+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[0] + " " + TableUtilizador.TABLE_UTILIZADOR_DATATYPES[0]
+				+ " sp_"+
+				;
+		String statements = "UPDATE " + TableCultura.TABLE_CULTURA_NAME + " " ;
+		statements += "WHERE sp_";
+		createStoredProcedure(connection, SP_SELECT_CULTURA_NAME, statements, args);
+	}
+
+	 */
+
+
 
 	public static ResultSet callSPSelect_Cultura(Connection connection, int IdUtilizador) throws SQLException {
 		CallableStatement cst = connection.prepareCall("{call Selecionar_Cultura(?)}");
