@@ -149,10 +149,10 @@ public class TableAlerta {
 		String insertDeath = CulturaSP.generateINSERTForAlerta("DeathZone");
 		String insertNormal = CulturaSP.generateINSERTForAlerta("Healthy");
 
-		finalStatements += "\nIF ((select time_to_sec(timediff(sp_" + TABLE_ALERTA_COLLUMS[8] + ", " + lastAlertaDangerDate_name + ")) / 3600 > 0.1) OR " + lastAlertaIf_name + " <> 'DangerZone')" +
+		finalStatements += "\nIF ((select time_to_sec(timediff(sp_" + TABLE_ALERTA_COLLUMS[8] + ", " + lastAlertaDangerDate_name + ")) / 3600 > 0.16) OR " + lastAlertaIf_name + " <> 'DangerZone')" +
 				" AND ((sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteDangerZoneInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteInferior_name  + ") OR (sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteDangerZoneSuperior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteSuperior_name + "))" +
 				" AND (sp_" + TABLE_ALERTA_COLLUMS[7] + " <> 'null') THEN\n" + insertDanger + " ;END IF;";
-		finalStatements += "\nIF ((select time_to_sec(timediff(sp_" + TABLE_ALERTA_COLLUMS[8] + ", " + lastAlertaDeathDate_name + ")) / 3600 > 0.1) OR " + lastAlertaIf_name + " <> 'DeathZone')" +
+		finalStatements += "\nIF ((select time_to_sec(timediff(sp_" + TABLE_ALERTA_COLLUMS[8] + ", " + lastAlertaDeathDate_name + ")) / 3600 > 0.08) OR " + lastAlertaIf_name + " <> 'DeathZone')" +
 				" AND (sp_" + TABLE_ALERTA_COLLUMS[4] + " < " + Variable_LimiteInferior_name + " OR sp_" + TABLE_ALERTA_COLLUMS[4] + " > " + Variable_LimiteSuperior_name + ")" +
 				" AND (sp_" + TABLE_ALERTA_COLLUMS[7] + " <> 'null') THEN\n" + insertDeath + " ;END IF;";
 		finalStatements += "\nIF " + lastAlertaIf_name + " <> 'Healthy' AND (sp_" + TABLE_ALERTA_COLLUMS[4] + " >= " + Variable_LimiteDangerZoneInferior_name + " AND sp_" + TABLE_ALERTA_COLLUMS[4] + " <= " + Variable_LimiteDangerZoneSuperior_name + ")" +
