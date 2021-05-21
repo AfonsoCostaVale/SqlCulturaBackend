@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
 
+import static sql.SqlController.executeSQL;
+
 public class CulturaSP {
 
 	//---------------------------------- SPs ----------------------------------
@@ -144,6 +146,25 @@ public class CulturaSP {
 		insertString += ")";
 
 		return insertString;
+	}
+
+	//ONLY FOR ALERTAS
+	public static void callStoredProcedureWithNull(Connection connection,String spName, String[]parameters, boolean isPredicted) throws SQLException {
+		int size=9;
+		if(isPredicted) size++;
+		String call = "CALL " + spName + "(";
+		for (int i=0;i<size;i++) {
+			if(parameters[i] == null && i==6) {
+				call += "null,";
+			} else {
+				call += "'" + parameters[i] + "',";
+			}
+		}
+		call = call.substring(0,call.length()-1);
+		call+=");";
+
+		System.out.println(call);
+		executeSQL(connection,call);
 	}
 
 	public static String generateINSERTForParametroCultura(String[] values, String culturaID, double percentage) {

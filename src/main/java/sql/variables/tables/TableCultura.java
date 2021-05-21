@@ -141,16 +141,14 @@ public class TableCultura {
 		String statements = "SELECT * FROM " + TABLE_CULTURA_NAME;// + " WHERE sp_" + TABLE_ALERTA_COLLUMS[7] + " = " + TABLE_ALERTA_NAME +"."+ TABLE_ALERTA_COLLUMS[7];
 		createStoredProcedure(connection, SP_SELECT_CULTURA_NAME, statements, args);
 	}
-	/*public static void createSPAtribuirUtilizadorCultura(Connection connection) throws SQLException {
-		String args ="IN sp_"+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[0] + " " + TableUtilizador.TABLE_UTILIZADOR_DATATYPES[0]
-				+ " sp_"+
-				;
+
+	public static void createSPAtribuirUtilizadorCultura(Connection connection) throws SQLException {
+		String args ="IN sp_"+TABLE_CULTURA_COLLUMS[2] + " " + TABLE_CULTURA_DATATYPES[2]
+				+ ", sp_"+TABLE_CULTURA;
 		String statements = "UPDATE " + TableCultura.TABLE_CULTURA_NAME + " " ;
 		statements += "WHERE sp_";
 		createStoredProcedure(connection, SP_SELECT_CULTURA_NAME, statements, args);
 	}
-
-	 */
 
 
 

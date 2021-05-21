@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static sql.CulturaSP.callStoredProcedureWithNull;
 import static sql.SqlController.*;
 import static sql.variables.GeneralVariables.*;
 
@@ -206,8 +207,7 @@ public class CulturaDB {
         createMqttReaderRole(connection);
     }
     
-    public static void insertMedicao(String medicao, Connection connection) throws SQLException {
-        if(lastMedicao == null) { lastMedicao = new ArrayList<>(); }
+    public static ArrayList<String> insertMedicao(String medicao, Connection connection) throws SQLException {
         ArrayList<String> values = new ArrayList<>();
         String[] splitData = medicao.split(",");
         String idSensor = "";
@@ -247,13 +247,16 @@ public class CulturaDB {
         String[] valuesToArray = new String[values.size()];
         valuesToArray = values.toArray(valuesToArray);
         callStoredProcedure(connection, TableMedicao.SP_INSERIR_MEDICAO_NAME, valuesToArray);
-        addCollection(Integer.parseInt(idSensor),values);
         checkForAlerta(connection, values, false);
+        return values;
     }
 
-    private static boolean didItGoThrough(Connection connection, ArrayList<String> medicaoValues) throws SQLException {
+    public static boolean didItGoThrough(Connection connection, ArrayList<String> medicaoValues) throws SQLException {
         ArrayList<Pair> medicaoPairs = new ArrayList<>();
+        //Safety measure
+        if(medicaoValues.size() > 4) { medicaoValues.remove(4); }
         for(int x=0;x!=medicaoValues.size();x++) {
+            //in the medicaoValues the index 0 is IdZona which has the index of 1 in the TABLE_MEDICAO_COLLUMS and so on...
             if(TableMedicao.TABLE_MEDICAO_COLLUMS[x+1].equals("Leitura"))
                 medicaoPairs.add(new Pair(TableMedicao.TABLE_MEDICAO_COLLUMS[x+1],Math.round(Double.parseDouble(medicaoValues.get(x)) * 100.0)/100.0));
             else
@@ -266,8 +269,6 @@ public class CulturaDB {
         else
            return true;
     }
-
-    private static ArrayList<Pair<Integer,ArrayList<String>>> lastMedicao;
 
     public static void checkForAlerta(Connection connection, ArrayList<String> values, boolean isItPredicted) throws SQLException {
         if(!isItPredicted) {
@@ -309,11 +310,13 @@ public class CulturaDB {
 
             String[] valuesToArray = new String[values.size()];
             valuesToArray = valuesForAlerta.toArray(valuesToArray);
-            if(!isItPredicted){ callStoredProcedure(connection,TableAlerta.SP_INSERIR_ALERTA_NAME,valuesToArray); }
+            if(!isItPredicted){
+                callStoredProcedureWithNull(connection,TableAlerta.SP_INSERIR_ALERTA_NAME,valuesToArray,false);
+            }
             else {
                 valuesForAlerta.add(values.get(4));
                 valuesToArray = valuesForAlerta.toArray(valuesToArray);
-                callStoredProcedure(connection,TableAlerta.SP_INSERIR_ALERTA_PREDICTED_NAME,valuesToArray);
+                callStoredProcedureWithNull(connection,TableAlerta.SP_INSERIR_ALERTA_PREDICTED_NAME,valuesToArray,true);
             }
             valuesForAlerta = new ArrayList<>();
         }
@@ -327,12 +330,6 @@ public class CulturaDB {
         return result.get(0);
     }
 
-    //For Array of last medicoes in MQTTReader
-    public static ArrayList<String> getLastMedicaoWithId(Connection connection, int id) throws SQLException {
-        if(didItGoThrough(connection,lastMedicao.get(indexOfCollection(id)).getB()))
-            return lastMedicao.get(indexOfCollection(id)).getB();
-        return new ArrayList<>();
-    }
 
     public static int getSensorId (Connection connection, String doc) throws SQLException {
         String[] splitData = doc.split(",");
@@ -354,21 +351,5 @@ public class CulturaDB {
             }
         }
         return Integer.parseInt(idSensor);
-    }
-
-    private static void addCollection(int collection,ArrayList<String> medicao) {
-        for (Pair<Integer, ArrayList<String>> col : lastMedicao) {
-            if(col.getA() == collection)
-                lastMedicao.set(indexOfCollection(collection),new Pair<>(collection,medicao));
-        }
-        lastMedicao.add(new Pair<>(collection,medicao));
-    }
-
-    private static int indexOfCollection (int collection) {
-        for (Pair<Integer, ArrayList<String>> col : lastMedicao) {
-            if(col.getA() == collection)
-                return lastMedicao.indexOf(col);
-        }
-        return 0;
     }
 }
