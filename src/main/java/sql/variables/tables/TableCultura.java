@@ -77,6 +77,8 @@ public class TableCultura {
 	public static final String SP_ALTERAR_CULTURA_NAME              = "Alterar_Cultura";
 	public static final String SP_ELIMINAR_CULTURA_NAME             = "Eliminar_Cultura";
 	public static final String SP_SELECT_CULTURA_NAME               = "Selecionar_Cultura";
+	public static final String SP_ALTERAR_INVESTIGADOR_CULTURA_NAME = "Alterar_Investigador_Cultura";
+	public static final String SP_ELIMINAR_INVESTIGADOR_CULTURA_NAME = "Eliminar_Investigador_Cultura";
 
 	public static void createSPInserir_Cultura(Connection connection) throws SQLException {
 
@@ -128,7 +130,31 @@ public class TableCultura {
 
 	}
 
-	public static void createSPEliminar_Cultura(Connection connection) throws SQLException {
+	public static void createSPAlterar_Investigador_Cultura(Connection connection) throws SQLException {
+
+		String args = "IN sp_" + TABLE_CULTURA_COLLUMS[2] + " " + TABLE_CULTURA_DATATYPES[2] +
+				", IN sp_" + TABLE_CULTURA_COLLUMS[0] + " " + TABLE_CULTURA_DATATYPES[0];
+
+		String statements = "UPDATE " + TABLE_CULTURA_NAME + " SET " + TABLE_CULTURA_COLLUMS[2] + " = sp_" + TABLE_CULTURA_COLLUMS[2] +
+				" WHERE " + TABLE_CULTURA_COLLUMS[0] + " = sp_" + TABLE_CULTURA_COLLUMS[0];
+
+		createStoredProcedure(connection, SP_ALTERAR_INVESTIGADOR_CULTURA_NAME, statements, args);
+
+	}
+
+	public static void createSPEliminar_Investigador_Cultura(Connection connection) throws SQLException {
+
+		String args = "IN sp_" + TABLE_CULTURA_COLLUMS[0] + " " + TABLE_CULTURA_DATATYPES[0];
+
+		String statements = "UPDATE " + TABLE_CULTURA_NAME + " SET " + TABLE_CULTURA_COLLUMS[2] + " = NULL" +
+				" WHERE " + TABLE_CULTURA_COLLUMS[0] + " = sp_" + TABLE_CULTURA_COLLUMS[0];
+
+		createStoredProcedure(connection, SP_ELIMINAR_INVESTIGADOR_CULTURA_NAME, statements, args);
+
+	}
+
+
+		public static void createSPEliminar_Cultura(Connection connection) throws SQLException {
 
 		String args = "IN sp_Param VARCHAR(100)" + ", IN sp_ParamValue " + TABLE_CULTURA_DATATYPES[0];
 	    String statements = "DELETE FROM " + TABLE_CULTURA_NAME + " WHERE 'sp_Param' = sp_ParamValue";

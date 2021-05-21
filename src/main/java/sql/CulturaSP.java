@@ -34,6 +34,8 @@ public class CulturaSP {
 
 	    TableCultura.createSPInserir_Cultura                     (connection);
 	    TableCultura.createSPAlterar_Cultura                     (connection);
+	    TableCultura.createSPAlterar_Investigador_Cultura 		 (connection);
+	    TableCultura.createSPEliminar_Investigador_Cultura 		 (connection);
 	    TableCultura.createSPEliminar_Cultura                    (connection);
 	    TableCultura.createSPSelect_Cultura                      (connection);
 
