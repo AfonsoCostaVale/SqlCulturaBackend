@@ -298,20 +298,20 @@ public class TableAlerta {
 				+ "SELECT " + TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[13] + " INTO " + Variable_LimiteDangerZoneSuperior_name + " FROM " + TableParametroCultura.TABLE_PARAMETROCULTURA_NAME + " WHERE " + TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[0] + " = sp_" + TABLE_ALERTA_COLLUMS[9] + "; END IF;";
 
 		String statementsLastAlerta = "SELECT " + TABLE_ALERTA_COLLUMS[10] + " INTO " + lastAlerta_name + " FROM " + TABLE_ALERTA_NAME
-				+ " WHERE " + TABLE_ALERTA_COLLUMS[2] + " = " + sensorID + " AND " + TABLE_ALERTA_COLLUMS[10] + " <> 'Aproaching DangerZone...' AND " +
+				+ " WHERE " + TABLE_ALERTA_COLLUMS[2] + " = " + sensorID + " AND " + TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[0] + " = sp_" + TABLE_ALERTA_COLLUMS[9] + " AND " + TABLE_ALERTA_COLLUMS[10] + " <> 'Aproaching DangerZone...' AND " +
 				TABLE_ALERTA_COLLUMS[10] + " <> 'Aproaching DeathZone...' AND " + TABLE_ALERTA_COLLUMS[10] + " <> 'Aproaching Healthy...'" +
 				" ORDER BY " + TABLE_ALERTA_COLLUMS[0] + " DESC LIMIT 1;";
 
 		statementsLastAlerta += "SELECT " + TABLE_ALERTA_COLLUMS[10] + " INTO " + lastAlertaAproach_name + " FROM " + TABLE_ALERTA_NAME
-				+ " WHERE " + TABLE_ALERTA_COLLUMS[2] + " = " + sensorID + " AND " + TABLE_ALERTA_COLLUMS[10] + " <> 'DangerZone' AND " +
+				+ " WHERE " + TABLE_ALERTA_COLLUMS[2] + " = " + sensorID + " AND " + TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[0] + " = sp_" + TABLE_ALERTA_COLLUMS[9] + " AND " + TABLE_ALERTA_COLLUMS[10] + " <> 'DangerZone' AND " +
 				TABLE_ALERTA_COLLUMS[10] + " <> 'DeathZone' AND " + TABLE_ALERTA_COLLUMS[10] + " <> 'Healthy'" +
 				" ORDER BY " + TABLE_ALERTA_COLLUMS[0] + " DESC LIMIT 1;";
 
 		statementsLastAlerta += "SELECT " + TABLE_ALERTA_COLLUMS[8] + " INTO " + lastAlertaDangerDate_name + " FROM " + TABLE_ALERTA_NAME
-				+ " WHERE " + TABLE_ALERTA_COLLUMS[2] + " = " + sensorID + " AND " + TABLE_ALERTA_COLLUMS[10] + " = 'DangerZone' ORDER BY " + TABLE_ALERTA_COLLUMS[0] + " DESC LIMIT 1;";
+				+ " WHERE " + TABLE_ALERTA_COLLUMS[2] + " = " + sensorID + " AND " + TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[0] + " = sp_" + TABLE_ALERTA_COLLUMS[9] + " AND " + TABLE_ALERTA_COLLUMS[10] + " = 'DangerZone' ORDER BY " + TABLE_ALERTA_COLLUMS[0] + " DESC LIMIT 1;";
 
 		statementsLastAlerta += "SELECT " + TABLE_ALERTA_COLLUMS[8] + " INTO " + lastAlertaDeathDate_name + " FROM " + TABLE_ALERTA_NAME
-				+ " WHERE " + TABLE_ALERTA_COLLUMS[2] + " = " + sensorID+ " AND " + TABLE_ALERTA_COLLUMS[10] + " = 'DeathZone' ORDER BY " + TABLE_ALERTA_COLLUMS[0] + " DESC LIMIT 1;";
+				+ " WHERE " + TABLE_ALERTA_COLLUMS[2] + " = " + sensorID + " AND " + TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[0] + " = sp_" + TABLE_ALERTA_COLLUMS[9] + " AND " + TABLE_ALERTA_COLLUMS[10] + " = 'DeathZone' ORDER BY " + TABLE_ALERTA_COLLUMS[0] + " DESC LIMIT 1;";
 
 		statementsLastAlerta += "\nSET " + lastAlertaIf_name + " = IFNULL(" + lastAlerta_name + ",'Healthy');";
 

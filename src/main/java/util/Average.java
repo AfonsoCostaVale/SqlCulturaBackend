@@ -13,12 +13,10 @@ public class Average {
     }
 
     public void putValue(double value){
-        if(size == 1000){
-            average = (average / size-1 ) + ( value / size);
-        } else {
-            average = (average + value)/size;
+        if(size < 1000){
             size++;
         }
+        average = (average / size-1 ) + ( value / size);
     }
 
     public double getAverage() {
