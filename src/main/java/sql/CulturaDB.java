@@ -42,6 +42,8 @@ public class CulturaDB {
         }
         CulturaSP.createAllSP(localConnection);
         createAllRoles(localConnection);
+        executeSQL(localConnection,"DROP USER IF EXISTS " + MQTTUSERNAME + "@localhost;");
+        callStoredProcedure(localConnection,TableUtilizador.SP_INSERIR_USER_MQTTREADER_NAME,new String[]{MQTTUSERNAME,MQTTUSERNAME,MQTTPASSWORD});
     }
 
     public static Connection getLocalConnection() throws SQLException {
@@ -50,6 +52,10 @@ public class CulturaDB {
 
     public static Connection getCloudConnection() throws SQLException {
         return connectDb(CLOUD_PATH_DB,  CLOUD_USERNAME, CLOUD_PASSWORD);
+    }
+
+    public static Connection getLocalMqttConnection() throws SQLException {
+        return connectDb(LOCAL_PATH_DB, MQTTUSERNAME, MQTTPASSWORD);
     }
 
     private static Connection changeLocalOrCloud(boolean isItCloud) throws SQLException {
@@ -192,13 +198,13 @@ public class CulturaDB {
         grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableCultura.SP_INSERIR_CULTURA_NAME,true);
         grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableCultura.SP_ALTERAR_CULTURA_NAME,true);
         grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableCultura.SP_ELIMINAR_CULTURA_NAME,true);
-       // grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableParametroCultura.SP_INSERIR_PARAMETRO_CULTURA_NAME,true);
-       // grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableParametroCultura.SP_ELIMINAR_PARAMETRO_CULTURA_NAME,true);
     }
 
     private static void createMqttReaderRole(Connection connection) throws SQLException {
         createRole(connection, TableUtilizador.ROLE_MQTTREADER);
         grantPermissionRole(connection, TableUtilizador.ROLE_MQTTREADER,"EXECUTE", TableMedicao.SP_INSERIR_MEDICAO_NAME,true);
+        grantPermissionRole(connection, TableUtilizador.ROLE_MQTTREADER,"EXECUTE", TableAlerta.SP_INSERIR_ALERTA_NAME,true);
+        grantPermissionRole(connection, TableUtilizador.ROLE_MQTTREADER,"EXECUTE",TableAlerta.SP_INSERIR_ALERTA_PREDICTED_NAME,true);
     }
 
     public static void createAllRoles(Connection connection) throws SQLException {

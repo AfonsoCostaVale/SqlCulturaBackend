@@ -202,11 +202,11 @@ public class TableParametroCultura {
 			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[10]+","//DangerZoneMinTemperatura
 			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[11]+","//DangerZoneMaxTemperatura
 			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[12]+","//DangerZoneMinLuz
-			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[13]+","//DangerZoneMaxLuz
-			    +"FROM "+TableParametroCultura.TABLE_PARAMETROCULTURA_NAME +","+TableUtilizador.TABLE_UTILIZADOR_NAME+","+TableCultura.TABLE_CULTURA_NAME
-			    +"WHERE "+ TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[1] + " = sp_" + TableCultura.TABLE_CULTURA_COLLUMS[0]
-			    +"WHERE "+ TableCultura.TABLE_CULTURA_NAME+"."+TableCultura.TABLE_CULTURA_COLLUMS[0] + " = " +TableUtilizador.TABLE_UTILIZADOR_NAME+"."+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[0]
-			    +"WHERE "+ TableUtilizador.TABLE_UTILIZADOR_NAME+"."+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[0] + " = sp_" + TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1]
+			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[13]    //DangerZoneMaxLuz
+			    +" FROM "+TableParametroCultura.TABLE_PARAMETROCULTURA_NAME +","+TableUtilizador.TABLE_UTILIZADOR_NAME+","+TableCultura.TABLE_CULTURA_NAME
+			    +" WHERE "+ TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[1] + " = sp_" + TableCultura.TABLE_CULTURA_COLLUMS[0]
+			    +" AND "+ TableCultura.TABLE_CULTURA_NAME+"."+TableCultura.TABLE_CULTURA_COLLUMS[0] + " = " +TableUtilizador.TABLE_UTILIZADOR_NAME+"."+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[0]
+			    +" AND "+ TableUtilizador.TABLE_UTILIZADOR_NAME+"."+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[0] + " = sp_" + TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1]
 			    ;
 
 	    createStoredProcedure(connection, SP_SELECIONAR_PARAMETROS_CULTURA_NAME, statements, args);
