@@ -73,7 +73,7 @@ public class TableSensor {
 	        TABLE_SENSOR_COLLUMS[3] + " " + TABLE_SENSOR_DATATYPES[3] + " " + TABLE_SENSOR_PARAMS[3],  //LimiteInferior
 	        TABLE_SENSOR_COLLUMS[4] + " " + TABLE_SENSOR_DATATYPES[4] + " " + TABLE_SENSOR_PARAMS[4],  //LimiteSuperior
 	        TABLE_SENSOR_COLLUMS[5] + " " + TABLE_SENSOR_DATATYPES[5] + " " + TABLE_SENSOR_PARAMS[5],  //IdZona
-	        "CONSTRAINT FK_IdZona FOREIGN KEY (" + TABLE_SENSOR_COLLUMS[5] + ") REFERENCES zona(" + TABLE_SENSOR_COLLUMS[5] + ")" //IdZona
+	        "CONSTRAINT FK_" + TABLE_SENSOR_COLLUMS[5] + " FOREIGN KEY (" + TABLE_SENSOR_COLLUMS[5] + ") REFERENCES " + TableZona.TABLE_ZONA_NAME +"(" + TABLE_SENSOR_COLLUMS[5] + ") ON UPDATE CASCADE ON DELETE CASCADE " //IdZona
 	};
 	public static final String SP_INSERIR_SENSOR_NAME               = "Inserir_Sensor";
 	public static final String SP_ALTERAR_SENSOR_NAME               = "Alterar_Sensor";
