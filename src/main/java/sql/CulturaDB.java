@@ -156,6 +156,7 @@ public class CulturaDB {
         grantPermissionRole(connection, TableUtilizador.ROLE_INVESTIGADOR,"EXECUTE", TableAlerta.SP_SELECT_ALERTA_NAME,true);
         grantPermissionRole(connection, TableUtilizador.ROLE_INVESTIGADOR,"EXECUTE", TableCultura.SP_SELECT_CULTURA_NAME,true);
         grantPermissionRole(connection, TableUtilizador.ROLE_INVESTIGADOR,"EXECUTE", TableMedicao.SP_SELECT_MEDICAO_NAME,true);
+        grantPermissionRole(connection, TableUtilizador.ROLE_INVESTIGADOR,"EXECUTE", TableParametroCultura.SP_SELECIONAR_PARAMETROS_CULTURA_NAME,true);
 
     }
 

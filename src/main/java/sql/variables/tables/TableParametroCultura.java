@@ -137,6 +137,7 @@ public class TableParametroCultura {
 	public static final String SP_INSERIR_PARAMETRO_CULTURA_NAME    = "Inserir_ParametroCultura";
 	public static final String SP_ALTERAR_PARAMETRO_CULTURA_NAME    = "Alterar_ParametroCultura";
 	public static final String SP_ELIMINAR_PARAMETRO_CULTURA_NAME   = "Eliminar_ParametroCultura";
+	public static final String SP_SELECIONAR_PARAMETROS_CULTURA_NAME   = "Selecionar_ParametrosCultura";
 
 	public static void createSPInserir_ParametroCultura(Connection connection) throws SQLException {
 
@@ -178,9 +179,36 @@ public class TableParametroCultura {
 
 	public static void createSPEliminar_ParametroCultura(Connection connection) throws SQLException {
 
-		String args = "IN sp_Param VARCHAR(100)" + ", IN sp_ParamValue " + TABLE_PARAMETROCULTURA_DATATYPES[0];
+		String args = "IN sp_" + ", IN sp_ParamValue " + TABLE_PARAMETROCULTURA_DATATYPES[0];
 	    String statements = "DELETE FROM " + TABLE_PARAMETROCULTURA_NAME + " WHERE 'sp_Param' = sp_ParamValue";
 
 	    createStoredProcedure(connection, SP_ELIMINAR_PARAMETRO_CULTURA_NAME, statements, args);
+	}
+	public static void createSPSelecionar_ParametrosCultura(Connection connection) throws SQLException {
+
+		String args = "IN sp_"+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1]+ " " + TableUtilizador.TABLE_UTILIZADOR_DATATYPES[1]
+				+ ", IN sp_"+TableCultura.TABLE_CULTURA_COLLUMS[0]+ " " + TableCultura.TABLE_CULTURA_DATATYPES[1];
+	    String statements = "SELECT "
+			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[0]+","//IdParametroCultura
+			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[1]+","//IdCultura
+			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[2]+","//MinHumidade
+			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[3]+","//MaxHumidade
+			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[4]+","//MinTemperatura
+			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[5]+","//MaxTemperatura
+			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[6]+","//MinLuz
+			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[7]+","//MaxLuz
+			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[8]+","//DangerZoneMinHumidade
+			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[9]+","//DangerZoneMaxHumidade
+			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[10]+","//DangerZoneMinTemperatura
+			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[11]+","//DangerZoneMaxTemperatura
+			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[12]+","//DangerZoneMinLuz
+			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[13]+","//DangerZoneMaxLuz
+			    +"FROM "+TableParametroCultura.TABLE_PARAMETROCULTURA_NAME +","+TableUtilizador.TABLE_UTILIZADOR_NAME+","+TableCultura.TABLE_CULTURA_NAME
+			    +"WHERE "+ TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[1] + " = sp_" + TableCultura.TABLE_CULTURA_COLLUMS[0]
+			    +"WHERE "+ TableCultura.TABLE_CULTURA_NAME+"."+TableCultura.TABLE_CULTURA_COLLUMS[0] + " = " +TableUtilizador.TABLE_UTILIZADOR_NAME+"."+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[0]
+			    +"WHERE "+ TableUtilizador.TABLE_UTILIZADOR_NAME+"."+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[0] + " = sp_" + TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1]
+			    ;
+
+	    createStoredProcedure(connection, SP_SELECIONAR_PARAMETROS_CULTURA_NAME, statements, args);
 	}
 }
