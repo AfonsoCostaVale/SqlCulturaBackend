@@ -1,7 +1,6 @@
 package sql;
 
 import sql.variables.tables.*;
-import util.Average;
 import util.Pair;
 
 import java.sql.Connection;
@@ -156,6 +155,7 @@ public class CulturaDB {
         grantPermissionRole(connection, TableUtilizador.ROLE_INVESTIGADOR,"EXECUTE", TableParametroCultura.SP_ALTERAR_PARAMETRO_CULTURA_NAME,true);
         grantPermissionRole(connection, TableUtilizador.ROLE_INVESTIGADOR,"EXECUTE", TableAlerta.SP_SELECT_ALERTA_NAME,true);
         grantPermissionRole(connection, TableUtilizador.ROLE_INVESTIGADOR,"EXECUTE", TableCultura.SP_SELECT_CULTURA_NAME,true);
+        grantPermissionRole(connection, TableUtilizador.ROLE_INVESTIGADOR,"EXECUTE", TableMedicao.SP_SELECT_MEDICAO_NAME,true);
 
     }
 

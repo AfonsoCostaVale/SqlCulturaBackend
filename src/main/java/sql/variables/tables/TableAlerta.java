@@ -223,8 +223,8 @@ public class TableAlerta {
 	}
 
 	public static void createSPSelect_Alerta(Connection connection) throws SQLException {
-//TODO implementar date
-		String args ="IN sp_"+ TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1] + " " + TableUtilizador.TABLE_UTILIZADOR_DATATYPES[1];
+
+		String args ="IN sp_"+ TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1] + " " + TableUtilizador.TABLE_UTILIZADOR_DATATYPES[1] + " ,IN sp_"+TABLE_ALERTA_COLLUMS[3] + " " + TABLE_ALERTA_DATATYPES[3];
 		String statements = "SELECT "
 				+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[1] + ", "
 				+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[2] + ", "
@@ -241,7 +241,8 @@ public class TableAlerta {
 				+" WHERE "+ TableUtilizador.TABLE_UTILIZADOR_NAME+"."+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[0] +" = " +TABLE_ALERTA_NAME+"."+TABLE_ALERTA_COLLUMS[7]
 				//AND Utilizador.username = sp_username
 				+" AND " +TableUtilizador.TABLE_UTILIZADOR_NAME + "." + TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1] + " = sp_"+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1]
-				+" ORDER BY "+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[8] + " DESC LIMIT 100 "
+				+" AND DATE("+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[3] + " ) = sp_"+TABLE_ALERTA_COLLUMS[3]
+				+" ORDER BY "+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[3] + " DESC LIMIT 100 "
 				;
 		createStoredProcedure(connection, SP_SELECT_ALERTA_NAME, statements, args);
 	}

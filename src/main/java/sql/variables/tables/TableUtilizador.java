@@ -18,7 +18,7 @@ public class TableUtilizador {
 	 * <p>TABLE_UTILIZADOR_COLLUMS</p>
 	 * <ul>
 	 *     <li>[0]IdUtilizador      </li>
-	 *     <li>[1]NomeInvestigador  </li>
+	 *     <li>[1]NomeUtilizador  </li>
 	 *     <li>[2]EmailUtilizador   </li>
 	 *     <li>[3]TipoUtilizador    </li>
 	 * </ul>
@@ -26,7 +26,7 @@ public class TableUtilizador {
 	 //     <li>[4]Password          </li>
 	public static final String[] TABLE_UTILIZADOR_COLLUMS = {
 			"IdUtilizador"
-			, "NomeInvestigador"
+			, "NomeUtilizador"
 			, "EmailUtilizador"
 			, "TipoUtilizador"
 			//, "Password"
@@ -35,7 +35,7 @@ public class TableUtilizador {
 	 * <p>TABLE_UTILIZADOR_DATATYPES</p>
 	 * <ul>
 	 *     <li>[0]INTEGER -IdUtilizador      </li>
-	 *     <li>[1]VARCHAR(100) -NomeInvestigador  </li>
+	 *     <li>[1]VARCHAR(100) -NomeUtilizador  </li>
 	 *     <li>[2]VARCHAR(100) -EmailUtilizador   </li>
 	 *     <li>[3]VARCHAR(100) -TipoUtilizador    </li>
 	 * </ul>
@@ -43,7 +43,7 @@ public class TableUtilizador {
 	 //    <li>[4]VARCHAR(100) -Password    </li>
 	public static final String[] TABLE_UTILIZADOR_DATATYPES = {
 	          "INTEGER"         //IdUtilizador
-	        , "VARCHAR(100)"    //NomeInvestigador
+	        , "VARCHAR(100)"    //NomeUtilizador
 	        , "VARCHAR(100)"    //EmailUtilizador
 	        , "VARCHAR(100)"    //TipoUtilizador
 	        //, "VARCHAR(100)"    //Password
@@ -52,7 +52,7 @@ public class TableUtilizador {
 	 * <p>TABLE_UTILIZADOR_PARAMS</p>
 	 * <ul>
 	 *     <li>[0]NOT NULL PRIMARY KEY AUTO_INCREMENT UNIQUE -IdUtilizador      </li>
-	 *     <li>[1]NOT NULL UNIQUE -NomeInvestigador    </li>
+	 *     <li>[1]NOT NULL UNIQUE -NomeUtilizador    </li>
 	 *     <li>[2]NOT NULL -EmailUtilizador     </li>
 	 *     <li>[3]NOT NULL -TipoUtilizador      </li>
 	 * </ul>
@@ -60,17 +60,17 @@ public class TableUtilizador {
 	 //  <li>[4]NOT NULL -Password            </li>
 	public static final String[] TABLE_UTILIZADOR_PARAMS = {
 	          "NOT NULL PRIMARY KEY AUTO_INCREMENT UNIQUE"      //IdUtilizador
-	        , "NOT NULL UNIQUE"                                 //NomeInvestigador
+	        , "NOT NULL UNIQUE"                                 //NomeUtilizador
 	        , "NOT NULL"                                        //EmailUtilizador
 	        , "NOT NULL"                                        //TipoUtilizador
 	        //, "NOT NULL"                                        //Password
 	};
 	public static final String[] TABLE_UTILIZADOR = {
 	         TABLE_UTILIZADOR_COLLUMS[0] + " " + TABLE_UTILIZADOR_DATATYPES[0] + " " + TABLE_UTILIZADOR_PARAMS[0]   //IdUtilizador
-	        ,TABLE_UTILIZADOR_COLLUMS[1] + " " + TABLE_UTILIZADOR_DATATYPES[1] + " " + TABLE_UTILIZADOR_PARAMS[1]   //NomeInvestigador
+	        ,TABLE_UTILIZADOR_COLLUMS[1] + " " + TABLE_UTILIZADOR_DATATYPES[1] + " " + TABLE_UTILIZADOR_PARAMS[1]   //NomeUtilizador
 	        ,TABLE_UTILIZADOR_COLLUMS[2] + " " + TABLE_UTILIZADOR_DATATYPES[2] + " " + TABLE_UTILIZADOR_PARAMS[2]   //EmailUtilizador
 			,TABLE_UTILIZADOR_COLLUMS[3] + " " + TABLE_UTILIZADOR_DATATYPES[3] + " " + TABLE_UTILIZADOR_PARAMS[3]   //TipoUtilizador
-	        //,TABLE_UTILIZADOR_COLLUMS[4] + " " + TABLE_UTILIZADOR_DATATYPES[4] + " " + TABLE_UTILIZADOR_PARAMS[4] //Password
+	        //,TABLE_UTILIZADOR_COLLUMS[4] + " " + TABLE_UTILIZADOR_DATATYPES[4] + " " + TABLE_UTILIZADOR_PARAMS[4]   //Password
 	};
 	public static final String SP_INSERIR_USER_INVESTIGADOR_NAME    = "Inserir_User_Investigador";
 	public static final String SP_INSERIR_USER_TECNICO_NAME         = "Inserir_User_Tecnico";

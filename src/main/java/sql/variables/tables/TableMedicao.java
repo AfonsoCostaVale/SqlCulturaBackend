@@ -64,6 +64,7 @@ public class TableMedicao {
 	public static final String SP_INSERIR_MEDICAO_NAME              = "Inserir_Medicao";
 	public static final String SP_ALTERAR_MEDICAO_NAME              = "Alterar_Medicao";
 	public static final String SP_ELIMINAR_MEDICAO_NAME             = "Eliminar_Medicao";
+	public static final String SP_SELECT_MEDICAO_NAME = "Selecionar_Medicao";
 
 	public static void createSPInserir_Medicao(Connection connection) throws SQLException {
 
@@ -106,6 +107,31 @@ public class TableMedicao {
 	            " WHERE " + TABLE_MEDICAO_COLLUMS[0] + " = sp_" + TABLE_MEDICAO_COLLUMS[0];
 
 	    createStoredProcedure(connection, SP_ALTERAR_MEDICAO_NAME, statements, args);
+
+	}
+	public static void createSPSelecionar_Medicao(Connection connection) throws SQLException {
+
+		String args = "IN sp_"+ TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1] + " " + TableUtilizador.TABLE_UTILIZADOR_DATATYPES[1] + ",";
+		args += " IN sp_"+ TableCultura.TABLE_CULTURA_COLLUMS[0] + " " + TableCultura.TABLE_CULTURA_DATATYPES[0] ;
+
+	    String statements = "SELECT "
+			    +TableMedicao.TABLE_MEDICAO_NAME+"."+TableMedicao.TABLE_MEDICAO_COLLUMS[3]+"," //medicao.Hora
+			    +TableMedicao.TABLE_MEDICAO_NAME+"."+TableMedicao.TABLE_MEDICAO_COLLUMS[4]+"," //medicao.Leitura
+			    +TableSensor.TABLE_SENSOR_NAME+"."+TableSensor.TABLE_SENSOR_COLLUMS[1]+"," //sensor.Tipo
+			    +TableCultura.TABLE_CULTURA_NAME+"."+TableCultura.TABLE_CULTURA_COLLUMS[1] //cultura.NomeCultura
+
+			    +" FROM " + TableMedicao.TABLE_MEDICAO_NAME+","+ TableSensor.TABLE_SENSOR_NAME+","+ TableCultura.TABLE_CULTURA_NAME+","+ TableUtilizador.TABLE_UTILIZADOR_NAME
+			    //+"medicao.Hora, medicao.Leitura, sensor.Tipo, cultura.NomeCultura FROM medicao,cultura,utilizador,sensor"
+			    +" WHERE "
+			    + TableCultura.TABLE_CULTURA_NAME+"."+TableCultura.TABLE_CULTURA_COLLUMS[4] +"="+ TableMedicao.TABLE_MEDICAO_NAME+"."+TableMedicao.TABLE_MEDICAO_COLLUMS[1] //+"cultura.IdZona = medicao.IdZona "
+			    +" AND "+TableSensor.TABLE_SENSOR_NAME+"."+TableSensor.TABLE_SENSOR_COLLUMS[0] +"="+ TableMedicao.TABLE_MEDICAO_NAME+"."+TableMedicao.TABLE_MEDICAO_COLLUMS[2]//+" AND sensor.IdSensor = medicao.IdSensor"
+			    +" AND "+TableCultura.TABLE_CULTURA_NAME+"."+TableCultura.TABLE_CULTURA_COLLUMS[0] +"= sp_"+ TableCultura.TABLE_CULTURA_COLLUMS[0]//+" AND cultura.IdCultura = sp_IdCultura
+			    +" AND "+TableCultura.TABLE_CULTURA_NAME+"."+TableCultura.TABLE_CULTURA_COLLUMS[2] + "=" + TableUtilizador.TABLE_UTILIZADOR_NAME+"."+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[0]//+" AND cultura.IdUtilizador=utilizador.IdUtilizador"
+			    +" AND "+TableUtilizador.TABLE_UTILIZADOR_NAME+"."+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1]+" = sp_"+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1]//+" AND utilizador.NomeInvestigador = sp_"+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1]
+			    +" AND Hora >= now() - interval 5 minute"
+			    +" ORDER BY Hora ASC";
+
+	    createStoredProcedure(connection, SP_SELECT_MEDICAO_NAME, statements, args);
 
 	}
 

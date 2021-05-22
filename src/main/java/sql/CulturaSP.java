@@ -20,6 +20,7 @@ public class CulturaSP {
 	    TableMedicao.createSPInserir_Medicao                     (connection);
 	    TableMedicao.createSPAlterar_Medicao                     (connection);
 	    TableMedicao.createSPEliminar_Medicao                    (connection);
+	    TableMedicao.createSPSelecionar_Medicao                  (connection);
 
 	    TableSensor.createSPInserir_Sensor                       (connection);
 	    TableSensor.createSPAlterar_Sensor                       (connection);
@@ -34,8 +35,8 @@ public class CulturaSP {
 
 	    TableCultura.createSPInserir_Cultura                     (connection);
 	    TableCultura.createSPAlterar_Cultura                     (connection);
-	    TableCultura.createSPAlterar_Investigador_Cultura 		 (connection);
-	    TableCultura.createSPEliminar_Investigador_Cultura 		 (connection);
+	    TableCultura.createSPAtribuir_Investigador_Cultura(connection);
+	    TableCultura.createSPRemover_Investigador_Cultura(connection);
 	    TableCultura.createSPEliminar_Cultura                    (connection);
 	    TableCultura.createSPSelect_Cultura                      (connection);
 

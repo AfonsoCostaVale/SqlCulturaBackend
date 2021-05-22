@@ -1,7 +1,6 @@
 package sql.variables.tables;
 
 import sql.CulturaSP;
-import sql.SqlController;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -73,12 +72,12 @@ public class TableCultura {
 	        "CONSTRAINT FK_" + TABLE_CULTURA_COLLUMS[2] + " FOREIGN KEY (" + TABLE_CULTURA_COLLUMS[2] + ") REFERENCES " + TableUtilizador.TABLE_UTILIZADOR_NAME + "(" + TABLE_CULTURA_COLLUMS[2] + ") ON UPDATE CASCADE ON DELETE SET NULL ",
 	        "CONSTRAINT FK4_" + TABLE_CULTURA_COLLUMS[4] + " FOREIGN KEY (" + TABLE_CULTURA_COLLUMS[4] + ") REFERENCES " + TableZona.TABLE_ZONA_NAME + "(" + TABLE_CULTURA_COLLUMS[4] + ") ON UPDATE CASCADE ON DELETE SET NULL "
 	};
-	public static final String SP_INSERIR_CULTURA_NAME              = "Inserir_Cultura";
-	public static final String SP_ALTERAR_CULTURA_NAME              = "Alterar_Cultura";
-	public static final String SP_ELIMINAR_CULTURA_NAME             = "Eliminar_Cultura";
-	public static final String SP_SELECT_CULTURA_NAME               = "Selecionar_Cultura";
-	public static final String SP_ALTERAR_INVESTIGADOR_CULTURA_NAME = "Alterar_Investigador_Cultura";
-	public static final String SP_ELIMINAR_INVESTIGADOR_CULTURA_NAME = "Eliminar_Investigador_Cultura";
+	public static final String SP_INSERIR_CULTURA_NAME               = "Inserir_Cultura";
+	public static final String SP_ALTERAR_CULTURA_NAME               = "Alterar_Cultura";
+	public static final String SP_ELIMINAR_CULTURA_NAME              = "Eliminar_Cultura";
+	public static final String SP_SELECT_CULTURA_NAME                = "Selecionar_Cultura";
+	public static final String SP_ATRIBUIR_INVESTIGADOR_CULTURA_NAME = "Atribuir_Investigador_Cultura";
+	public static final String SP_REMOVER_INVESTIGADOR_CULTURA_NAME = "Remover_Investigador_Cultura";
 
 	public static void createSPInserir_Cultura(Connection connection) throws SQLException {
 
@@ -130,7 +129,7 @@ public class TableCultura {
 
 	}
 
-	public static void createSPAlterar_Investigador_Cultura(Connection connection) throws SQLException {
+	public static void createSPAtribuir_Investigador_Cultura(Connection connection) throws SQLException {
 
 		String args = "IN sp_" + TABLE_CULTURA_COLLUMS[2] + " " + TABLE_CULTURA_DATATYPES[2] +
 				", IN sp_" + TABLE_CULTURA_COLLUMS[0] + " " + TABLE_CULTURA_DATATYPES[0];
@@ -138,23 +137,22 @@ public class TableCultura {
 		String statements = "UPDATE " + TABLE_CULTURA_NAME + " SET " + TABLE_CULTURA_COLLUMS[2] + " = sp_" + TABLE_CULTURA_COLLUMS[2] +
 				" WHERE " + TABLE_CULTURA_COLLUMS[0] + " = sp_" + TABLE_CULTURA_COLLUMS[0];
 
-		createStoredProcedure(connection, SP_ALTERAR_INVESTIGADOR_CULTURA_NAME, statements, args);
+		createStoredProcedure(connection, SP_ATRIBUIR_INVESTIGADOR_CULTURA_NAME, statements, args);
 
 	}
 
-	public static void createSPEliminar_Investigador_Cultura(Connection connection) throws SQLException {
+	public static void createSPRemover_Investigador_Cultura(Connection connection) throws SQLException {
 
 		String args = "IN sp_" + TABLE_CULTURA_COLLUMS[0] + " " + TABLE_CULTURA_DATATYPES[0];
 
 		String statements = "UPDATE " + TABLE_CULTURA_NAME + " SET " + TABLE_CULTURA_COLLUMS[2] + " = NULL" +
 				" WHERE " + TABLE_CULTURA_COLLUMS[0] + " = sp_" + TABLE_CULTURA_COLLUMS[0];
 
-		createStoredProcedure(connection, SP_ELIMINAR_INVESTIGADOR_CULTURA_NAME, statements, args);
+		createStoredProcedure(connection, SP_REMOVER_INVESTIGADOR_CULTURA_NAME, statements, args);
 
 	}
 
-
-		public static void createSPEliminar_Cultura(Connection connection) throws SQLException {
+	public static void createSPEliminar_Cultura(Connection connection) throws SQLException {
 
 		String args = "IN sp_Param VARCHAR(100)" + ", IN sp_ParamValue " + TABLE_CULTURA_DATATYPES[0];
 	    String statements = "DELETE FROM " + TABLE_CULTURA_NAME + " WHERE 'sp_Param' = sp_ParamValue";
@@ -167,16 +165,6 @@ public class TableCultura {
 		String statements = "SELECT * FROM " + TABLE_CULTURA_NAME;// + " WHERE sp_" + TABLE_ALERTA_COLLUMS[7] + " = " + TABLE_ALERTA_NAME +"."+ TABLE_ALERTA_COLLUMS[7];
 		createStoredProcedure(connection, SP_SELECT_CULTURA_NAME, statements, args);
 	}
-
-	public static void createSPAtribuirUtilizadorCultura(Connection connection) throws SQLException {
-		String args ="IN sp_"+TABLE_CULTURA_COLLUMS[2] + " " + TABLE_CULTURA_DATATYPES[2]
-				+ ", sp_"+TABLE_CULTURA;
-		String statements = "UPDATE " + TableCultura.TABLE_CULTURA_NAME + " " ;
-		statements += "WHERE sp_";
-		createStoredProcedure(connection, SP_SELECT_CULTURA_NAME, statements, args);
-	}
-
-
 
 	public static ResultSet callSPSelect_Cultura(Connection connection, int IdUtilizador) throws SQLException {
 		CallableStatement cst = connection.prepareCall("{call Selecionar_Cultura(?)}");
