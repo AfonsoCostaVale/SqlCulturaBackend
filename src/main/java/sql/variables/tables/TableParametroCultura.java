@@ -138,6 +138,7 @@ public class TableParametroCultura {
 	public static final String SP_ALTERAR_PARAMETRO_CULTURA_NAME    = "Alterar_ParametroCultura";
 	public static final String SP_ELIMINAR_PARAMETRO_CULTURA_NAME   = "Eliminar_ParametroCultura";
 	public static final String SP_SELECIONAR_PARAMETROS_CULTURA_NAME   = "Selecionar_ParametrosCultura";
+	public static final String SP_ALTERAR_PARAMETRO_CULTURA_INVESTIGADOR_NAME = "Alterar_ParametroCultura_Investigador";
 
 	public static void createSPInserir_ParametroCultura(Connection connection) throws SQLException {
 
@@ -176,6 +177,62 @@ public class TableParametroCultura {
 	    createStoredProcedure(connection, SP_ALTERAR_PARAMETRO_CULTURA_NAME, statements, args);
 
 	}
+	/*
+	DECLARE var_ParametroID INTEGER default -1;
+	SELECT IdParametroCultura INTO var_parametroID FROM parametrocultura,utilizador, cultura
+	WHERE parametrocultura.IdParametroCultura = sp_IdParametroCultura
+	AND parametrocultura.IdCultura = cultura.IdCultura
+	AND cultura.IdUtilizador=utilizador.IdUtilizador
+	AND utilizador.NomeUtilizador = sp_NomeUtilizador
+	;
+	*/
+	public static void createSPAlterar_ParametroCultura_Investigador(Connection connection) throws SQLException {
+
+
+		String args =
+				  "IN sp_"+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1] + " " + TableUtilizador.TABLE_UTILIZADOR_DATATYPES[1] + ","
+				 +"IN sp_"+TABLE_PARAMETROCULTURA_COLLUMS[0] + " " + TABLE_PARAMETROCULTURA_DATATYPES[0] + ","
+				 +"IN sp_"+TABLE_PARAMETROCULTURA_COLLUMS[2] + " " + TABLE_PARAMETROCULTURA_DATATYPES[2] + ","
+				 +"IN sp_"+TABLE_PARAMETROCULTURA_COLLUMS[3] + " " + TABLE_PARAMETROCULTURA_DATATYPES[3] + ","
+				 +"IN sp_"+TABLE_PARAMETROCULTURA_COLLUMS[4] + " " + TABLE_PARAMETROCULTURA_DATATYPES[4] + ","
+				 +"IN sp_"+TABLE_PARAMETROCULTURA_COLLUMS[5] + " " + TABLE_PARAMETROCULTURA_DATATYPES[5] + ","
+				 +"IN sp_"+TABLE_PARAMETROCULTURA_COLLUMS[6] + " " + TABLE_PARAMETROCULTURA_DATATYPES[6] + ","
+				 +"IN sp_"+TABLE_PARAMETROCULTURA_COLLUMS[7] + " " + TABLE_PARAMETROCULTURA_DATATYPES[7] + ","
+				 +"IN sp_"+TABLE_PARAMETROCULTURA_COLLUMS[8] + " " + TABLE_PARAMETROCULTURA_DATATYPES[8] + ","
+				 +"IN sp_"+TABLE_PARAMETROCULTURA_COLLUMS[9] + " " + TABLE_PARAMETROCULTURA_DATATYPES[9] + ","
+				 +"IN sp_"+TABLE_PARAMETROCULTURA_COLLUMS[10] + " " + TABLE_PARAMETROCULTURA_DATATYPES[10] + ","
+				 +"IN sp_"+TABLE_PARAMETROCULTURA_COLLUMS[11] + " " + TABLE_PARAMETROCULTURA_DATATYPES[11] + ","
+				 +"IN sp_"+TABLE_PARAMETROCULTURA_COLLUMS[12] + " " + TABLE_PARAMETROCULTURA_DATATYPES[12] + ","
+				 +"IN sp_"+TABLE_PARAMETROCULTURA_COLLUMS[13] + " " + TABLE_PARAMETROCULTURA_DATATYPES[13]
+
+				;
+
+		String declare = "DECLARE var_ParametroID INTEGER default -1;\n"
+				+ "SELECT "+TABLE_PARAMETROCULTURA_COLLUMS[0]+" INTO var_parametroID \n FROM "
+				+TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+","+TableUtilizador.TABLE_UTILIZADOR_NAME+","+TableCultura.TABLE_CULTURA_NAME+"\n"
+				+"WHERE "+TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[0]+" = sp_"+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[0]+"\n"
+				+"AND "+TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[1]+" = "+TableCultura.TABLE_CULTURA_NAME+"."+TableCultura.TABLE_CULTURA_COLLUMS[0]+"\n"
+				+"AND "+TableCultura.TABLE_CULTURA_NAME+"."+TableCultura.TABLE_CULTURA_COLLUMS[2]+"="+TableUtilizador.TABLE_UTILIZADOR_NAME+"."+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[0]+"\n"
+				+"AND "+TableUtilizador.TABLE_UTILIZADOR_NAME+"."+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1]+" = sp_"+ TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1]
+				+";\n"
+				;
+
+	    String statements = "UPDATE " + TABLE_PARAMETROCULTURA_NAME + " SET " + TABLE_PARAMETROCULTURA_COLLUMS[3] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[3] +
+	            " ," + TABLE_PARAMETROCULTURA_COLLUMS[4] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[4] +
+	            " ," + TABLE_PARAMETROCULTURA_COLLUMS[5] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[5] +
+	            " ," + TABLE_PARAMETROCULTURA_COLLUMS[6] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[6] +
+	            " ," + TABLE_PARAMETROCULTURA_COLLUMS[7] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[7] +
+	            " ," + TABLE_PARAMETROCULTURA_COLLUMS[8] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[8] +
+	            " ," + TABLE_PARAMETROCULTURA_COLLUMS[9] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[9] +
+	            " ," + TABLE_PARAMETROCULTURA_COLLUMS[10] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[10] +
+	            " ," + TABLE_PARAMETROCULTURA_COLLUMS[11] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[11] +
+	            " ," + TABLE_PARAMETROCULTURA_COLLUMS[12] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[12] +
+	            " ," + TABLE_PARAMETROCULTURA_COLLUMS[13] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[13] +
+	            " WHERE " + TABLE_PARAMETROCULTURA_COLLUMS[0] + " = var_ParametroID";
+
+	    createStoredProcedure(connection, SP_ALTERAR_PARAMETRO_CULTURA_INVESTIGADOR_NAME,declare+ statements, args);
+
+	}
 
 	public static void createSPEliminar_ParametroCultura(Connection connection) throws SQLException {
 
@@ -204,9 +261,10 @@ public class TableParametroCultura {
 			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[12]+","//DangerZoneMinLuz
 			    +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[13]    //DangerZoneMaxLuz
 			    +" FROM "+TableParametroCultura.TABLE_PARAMETROCULTURA_NAME +","+TableUtilizador.TABLE_UTILIZADOR_NAME+","+TableCultura.TABLE_CULTURA_NAME
-			    +" WHERE "+ TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[1] + " = sp_" + TableCultura.TABLE_CULTURA_COLLUMS[0]
-			    +" AND "+ TableCultura.TABLE_CULTURA_NAME+"."+TableCultura.TABLE_CULTURA_COLLUMS[0] + " = " +TableUtilizador.TABLE_UTILIZADOR_NAME+"."+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[0]
-			    +" AND "+ TableUtilizador.TABLE_UTILIZADOR_NAME+"."+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[0] + " = sp_" + TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1]
+			    +" WHERE "+ TableCultura.TABLE_CULTURA_NAME+"."+TableCultura.TABLE_CULTURA_COLLUMS[0] + " = sp_" + TableCultura.TABLE_CULTURA_COLLUMS[0]
+			    +" AND "+ TableCultura.TABLE_CULTURA_NAME+"."+TableCultura.TABLE_CULTURA_COLLUMS[0] + " = " +TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[1]
+			    +" AND "+ TableCultura.TABLE_CULTURA_NAME+"."+TableCultura.TABLE_CULTURA_COLLUMS[2] + " = " +TableUtilizador.TABLE_UTILIZADOR_NAME+"."+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[0]
+			    +" AND "+ TableUtilizador.TABLE_UTILIZADOR_NAME+"."+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1] + " = sp_" + TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1]
 			    ;
 
 	    createStoredProcedure(connection, SP_SELECIONAR_PARAMETROS_CULTURA_NAME, statements, args);

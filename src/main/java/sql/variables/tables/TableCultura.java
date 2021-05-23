@@ -161,8 +161,10 @@ public class TableCultura {
 	}
 
 	public static void createSPSelect_Cultura(Connection connection) throws SQLException {
-		String args ="";// "IN sp_"+ TABLE_ALERTA_COLLUMS[7] + " " + TABLE_ALERTA_DATATYPES[7];
-		String statements = "SELECT * FROM " + TABLE_CULTURA_NAME;// + " WHERE sp_" + TABLE_ALERTA_COLLUMS[7] + " = " + TABLE_ALERTA_NAME +"."+ TABLE_ALERTA_COLLUMS[7];
+		String args ="IN sp_" + TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1] + " " +TableUtilizador.TABLE_UTILIZADOR_DATATYPES[1];// "IN sp_"+ TABLE_ALERTA_COLLUMS[7] + " " + TABLE_ALERTA_DATATYPES[7];
+		String statements = "SELECT * FROM " + TABLE_CULTURA_NAME + "," + TableUtilizador.TABLE_UTILIZADOR_NAME
+				+" WHERE " + TableUtilizador.TABLE_UTILIZADOR_NAME + "." + TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1] + "= sp_"+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1]
+				+" AND " + TABLE_CULTURA_NAME+"."+TABLE_CULTURA_COLLUMS[2] + "="+TableUtilizador.TABLE_UTILIZADOR_NAME + "." + TableUtilizador.TABLE_UTILIZADOR_COLLUMS[0];
 		createStoredProcedure(connection, SP_SELECT_CULTURA_NAME, statements, args);
 	}
 

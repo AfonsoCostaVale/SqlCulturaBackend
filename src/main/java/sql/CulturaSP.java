@@ -43,6 +43,7 @@ public class CulturaSP {
 	  //  TableParametroCultura.createSPInserir_ParametroCultura   (connection);
 	    TableParametroCultura.createSPAlterar_ParametroCultura      (connection);
 	    TableParametroCultura.createSPSelecionar_ParametrosCultura  (connection);
+	    TableParametroCultura.createSPAlterar_ParametroCultura_Investigador(connection);
 	  //  TableParametroCultura.createSPEliminar_ParametroCultura  (connection);
 
 	    TableAlerta.createSPInserir_Alerta                       (connection);
