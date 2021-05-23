@@ -42,8 +42,8 @@ public class CulturaDB {
         }
         CulturaSP.createAllSP(localConnection);
         createAllRoles(localConnection);
-        executeSQL(localConnection,"DROP USER IF EXISTS " + MQTTUSERNAME + "@localhost;");
-        callStoredProcedure(localConnection,TableUtilizador.SP_INSERIR_USER_MQTTREADER_NAME,new String[]{MQTTUSERNAME,MQTTUSERNAME,MQTTPASSWORD});
+        executeSQL(localConnection,"DROP USER IF EXISTS " + CLONERUSERNAME + "@localhost;");
+        callStoredProcedure(localConnection,TableUtilizador.SP_INSERIR_USER_CLONER_NAME,new String[]{CLONERUSERNAME, CLONERUSERNAME, CLONERPASSWORD});
     }
 
     public static Connection getLocalConnection() throws SQLException {
@@ -54,8 +54,8 @@ public class CulturaDB {
         return connectDb(CLOUD_PATH_DB,  CLOUD_USERNAME, CLOUD_PASSWORD);
     }
 
-    public static Connection getLocalMqttConnection() throws SQLException {
-        return connectDb(LOCAL_PATH_DB, MQTTUSERNAME, MQTTPASSWORD);
+    public static Connection getLocalClonerConnection() throws SQLException {
+        return connectDb(LOCAL_PATH_DB, CLONERUSERNAME, CLONERPASSWORD);
     }
 
     private static Connection changeLocalOrCloud(boolean isItCloud) throws SQLException {
@@ -192,7 +192,7 @@ public class CulturaDB {
         grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableUtilizador.SP_INSERIR_USER_INVESTIGADOR_NAME,true);
         grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableUtilizador.SP_INSERIR_USER_TECNICO_NAME,true);
         grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableUtilizador.SP_INSERIR_USER_ADMIN_NAME,true);
-        grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableUtilizador.SP_INSERIR_USER_MQTTREADER_NAME,true);
+        grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableUtilizador.SP_INSERIR_USER_CLONER_NAME,true);
         grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableUtilizador.SP_ALTERAR_USER_NAME,true);
         grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableUtilizador.SP_ELIMINAR_USER_NAME,true);
         grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableCultura.SP_INSERIR_CULTURA_NAME,true);
@@ -200,18 +200,26 @@ public class CulturaDB {
         grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableCultura.SP_ELIMINAR_CULTURA_NAME,true);
     }
 
-    private static void createMqttReaderRole(Connection connection) throws SQLException {
-        createRole(connection, TableUtilizador.ROLE_MQTTREADER);
-        grantPermissionRole(connection, TableUtilizador.ROLE_MQTTREADER,"EXECUTE", TableMedicao.SP_INSERIR_MEDICAO_NAME,true);
-        grantPermissionRole(connection, TableUtilizador.ROLE_MQTTREADER,"EXECUTE", TableAlerta.SP_INSERIR_ALERTA_NAME,true);
-        grantPermissionRole(connection, TableUtilizador.ROLE_MQTTREADER,"EXECUTE",TableAlerta.SP_INSERIR_ALERTA_PREDICTED_NAME,true);
+    private static void createClonerRole(Connection connection) throws SQLException {
+        createRole(connection, TableUtilizador.ROLE_CLONER);
+        //Select
+        grantPermissionRole(connection, TableUtilizador.ROLE_CLONER,"SELECT", TableSensor.TABLE_SENSOR_NAME,false);
+        grantPermissionRole(connection, TableUtilizador.ROLE_CLONER,"SELECT", TableZona.TABLE_ZONA_NAME,false);
+        grantPermissionRole(connection, TableUtilizador.ROLE_CLONER,"SELECT", TableMedicao.TABLE_MEDICAO_NAME,false);
+        grantPermissionRole(connection, TableUtilizador.ROLE_CLONER,"SELECT", TableCultura.TABLE_CULTURA_NAME,false);
+        grantPermissionRole(connection, TableUtilizador.ROLE_CLONER,"SELECT", TableAlerta.TABLE_ALERTA_NAME,false);
+        grantPermissionRole(connection, TableUtilizador.ROLE_CLONER,"SELECT", TableParametroCultura.TABLE_PARAMETROCULTURA_NAME,false);
+        //Stored Procedures
+        grantPermissionRole(connection, TableUtilizador.ROLE_CLONER,"EXECUTE", TableMedicao.SP_INSERIR_MEDICAO_NAME,true);
+        grantPermissionRole(connection, TableUtilizador.ROLE_CLONER,"EXECUTE", TableAlerta.SP_INSERIR_ALERTA_NAME,true);
+        grantPermissionRole(connection, TableUtilizador.ROLE_CLONER,"EXECUTE",TableAlerta.SP_INSERIR_ALERTA_PREDICTED_NAME,true);
     }
 
     public static void createAllRoles(Connection connection) throws SQLException {
         createInvestigadorRole(connection);
         createTecnicoRole(connection);
         createAdminRole(connection);
-        createMqttReaderRole(connection);
+        createClonerRole(connection);
     }
     
     public static ArrayList<String> insertMedicao(String medicao, Connection connection) throws SQLException {

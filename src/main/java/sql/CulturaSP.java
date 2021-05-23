@@ -29,7 +29,7 @@ public class CulturaSP {
 	    TableUtilizador.createSPInserir_User_Investigador        (connection);
 	    TableUtilizador.createSPInserir_User_Tecnico             (connection);
 	    TableUtilizador.createSPInserir_User_Admin       		  (connection);
-	    TableUtilizador.createSPInserir_User_MqttReader          (connection);
+	    TableUtilizador.createSPInserir_User_Cloner(connection);
 	    TableUtilizador.createSPAlterar_User                     (connection);
 	    TableUtilizador.createSPEliminar_User                    (connection);
 

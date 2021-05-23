@@ -9,8 +9,8 @@ public class GeneralVariables {
     public static final String LOCAL_PATH_MYSQL= "jdbc:mysql://localhost:3306/";
     public static final String DB_NAME = "culturamysql";
     public static final String LOCAL_PATH_DB= LOCAL_PATH_MYSQL+DB_NAME;
-    public static final String MQTTUSERNAME = "mqttreader";
-    public static final String MQTTPASSWORD = "dHbK5ddPuOLi8f(i";
+    public static final String CLONERUSERNAME = "cloner";
+    public static final String CLONERPASSWORD = "dHbK5ddPuOLi8f(i";
 
     public static final String ROOTUSERNAME = "root";
     public static final String ROOTPASSWORD = "";
