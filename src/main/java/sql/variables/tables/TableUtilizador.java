@@ -75,7 +75,7 @@ public class TableUtilizador {
 	public static final String SP_INSERIR_USER_INVESTIGADOR_NAME    = "Inserir_User_Investigador";
 	public static final String SP_INSERIR_USER_TECNICO_NAME         = "Inserir_User_Tecnico";
 	public static final String SP_INSERIR_USER_ADMIN_NAME           = "Inserir_User_Admin";
-	public static final String SP_INSERIR_USER_CLONER_NAME = "Inserir_User_MqttReader";
+	public static final String SP_INSERIR_USER_CLONER_NAME          = "Inserir_User_Cloner";
 	public static final String SP_ALTERAR_USER_NAME                 = "Alterar_User";
 	public static final String SP_ELIMINAR_USER_NAME                = "Eliminar_User";
 	//Roles for Application
