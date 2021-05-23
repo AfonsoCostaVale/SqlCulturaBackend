@@ -198,6 +198,8 @@ public class CulturaDB {
         grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableCultura.SP_INSERIR_CULTURA_NAME,true);
         grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableCultura.SP_ALTERAR_CULTURA_NAME,true);
         grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableCultura.SP_ELIMINAR_CULTURA_NAME,true);
+        grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableCultura.SP_ATRIBUIR_INVESTIGADOR_CULTURA_NAME,true);
+        grantPermissionRole(connection, TableUtilizador.ROLE_ADMIN,"EXECUTE", TableCultura.SP_REMOVER_INVESTIGADOR_CULTURA_NAME,true);
     }
 
     private static void createClonerRole(Connection connection) throws SQLException {
