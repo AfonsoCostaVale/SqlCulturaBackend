@@ -242,7 +242,8 @@ public class TableAlerta {
 				//AND Utilizador.username = sp_username
 				+" AND " +TableUtilizador.TABLE_UTILIZADOR_NAME + "." + TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1] + " = sp_"+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1]
 				+" AND DATE("+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[3] + " ) = sp_"+TABLE_ALERTA_COLLUMS[3]
-				+" ORDER BY "+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[3] + " DESC LIMIT 100 "
+				+" AND "+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[8]+ " >= now() - interval 1 second"
+				+" ORDER BY "+TABLE_ALERTA_NAME + "." +TABLE_ALERTA_COLLUMS[3] + " DESC"
 				;
 		createStoredProcedure(connection, SP_SELECT_ALERTA_NAME, statements, args);
 	}

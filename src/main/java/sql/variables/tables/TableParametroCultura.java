@@ -207,17 +207,18 @@ public class TableParametroCultura {
 
 				;
 
-		String declare = "DECLARE var_ParametroID INTEGER default -1;\n"
+		String var_parametroID = "var_ParametroID";
+		String declare = "DECLARE " + var_parametroID + " INTEGER default -1;\n"
 				+ "SELECT "+TABLE_PARAMETROCULTURA_COLLUMS[0]+" INTO var_parametroID \n FROM "
 				+TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+","+TableUtilizador.TABLE_UTILIZADOR_NAME+","+TableCultura.TABLE_CULTURA_NAME+"\n"
 				+"WHERE "+TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[0]+" = sp_"+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[0]+"\n"
 				+"AND "+TableParametroCultura.TABLE_PARAMETROCULTURA_NAME+"."+TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[1]+" = "+TableCultura.TABLE_CULTURA_NAME+"."+TableCultura.TABLE_CULTURA_COLLUMS[0]+"\n"
 				+"AND "+TableCultura.TABLE_CULTURA_NAME+"."+TableCultura.TABLE_CULTURA_COLLUMS[2]+"="+TableUtilizador.TABLE_UTILIZADOR_NAME+"."+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[0]+"\n"
 				+"AND "+TableUtilizador.TABLE_UTILIZADOR_NAME+"."+TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1]+" = sp_"+ TableUtilizador.TABLE_UTILIZADOR_COLLUMS[1]
-				+";\n"
-				;
+				+";\n";
 
-	    String statements = "UPDATE " + TABLE_PARAMETROCULTURA_NAME + " SET " + TABLE_PARAMETROCULTURA_COLLUMS[3] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[3] +
+	    String statements = "UPDATE " + TABLE_PARAMETROCULTURA_NAME + " SET " + TABLE_PARAMETROCULTURA_COLLUMS[2] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[2] +
+	            " ," + TABLE_PARAMETROCULTURA_COLLUMS[3] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[3] +
 	            " ," + TABLE_PARAMETROCULTURA_COLLUMS[4] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[4] +
 	            " ," + TABLE_PARAMETROCULTURA_COLLUMS[5] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[5] +
 	            " ," + TABLE_PARAMETROCULTURA_COLLUMS[6] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[6] +
@@ -228,8 +229,10 @@ public class TableParametroCultura {
 	            " ," + TABLE_PARAMETROCULTURA_COLLUMS[11] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[11] +
 	            " ," + TABLE_PARAMETROCULTURA_COLLUMS[12] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[12] +
 	            " ," + TABLE_PARAMETROCULTURA_COLLUMS[13] + " = sp_" + TABLE_PARAMETROCULTURA_COLLUMS[13] +
-	            " WHERE " + TABLE_PARAMETROCULTURA_COLLUMS[0] + " = var_ParametroID";
+	            " WHERE " + TABLE_PARAMETROCULTURA_COLLUMS[0] + " = " + var_parametroID + ";";
 
+
+	    String finalSelect= " SELECT "+var_parametroID +" as "+TABLE_PARAMETROCULTURA_COLLUMS[0] + ";";
 	    createStoredProcedure(connection, SP_ALTERAR_PARAMETRO_CULTURA_INVESTIGADOR_NAME,declare+ statements, args);
 
 	}
