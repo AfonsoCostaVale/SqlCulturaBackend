@@ -86,7 +86,7 @@ public class SqlController{
         call = call.substring(0,call.length()-1);
         call+=");";
 
-        System.out.println(call);
+        //System.out.println(call);
         executeSQL(connection,call);
     }
 
@@ -103,7 +103,7 @@ public class SqlController{
 
         String sql  ="INSERT INTO "+ tableName+" ("+columnsString+") VALUES ("+valuesString+")";
 
-        System.out.println(sql);
+        //System.out.println(sql);
 
         executeSQL(connection , sql);
 
@@ -118,7 +118,7 @@ public class SqlController{
         // loop through the result set
         while (rs.next()) {
             for (String column : columns) {
-                System.out.println(rs.getString(column));
+                //System.out.println(rs.getString(column));
             }
         }
     }
@@ -277,11 +277,11 @@ public class SqlController{
     }
 
     public static void executeSQL(Connection connection, String stattement) throws SQLException {
-        System.out.println("Trying to execute: "+ stattement);
+        //System.out.println("Trying to execute: "+ stattement);
         Statement statement = connection.createStatement();
         statement.execute(stattement);
 
-        System.out.println("Executed "+ stattement);
+        //System.out.println("Executed "+ stattement);
     }
 
     public static String getCurrentUser(Connection connection) throws SQLException {

@@ -297,7 +297,7 @@ public class CulturaDB {
                 getElementFromDbTable(connection,TableCultura.TABLE_CULTURA_NAME,new String[]{TableCultura.TABLE_CULTURA_COLLUMS[0]},TableCultura.TABLE_CULTURA_COLLUMS[4],values.get(0));
 
         for(String cultura:culturasAffected) {
-            System.out.println("Cultura: " + cultura);
+            //System.out.println("Cultura: " + cultura);
             String idParametroCultura =
                     (String) getElementFromDbTable(connection,TableParametroCultura.TABLE_PARAMETROCULTURA_NAME
                             ,TableParametroCultura.TABLE_PARAMETROCULTURA_COLLUMS[0]

@@ -168,7 +168,7 @@ public class CulturaSP {
 		call = call.substring(0,call.length()-1);
 		call+=");";
 
-		System.out.println(call);
+		//System.out.println(call);
 		executeSQL(connection,call);
 	}
 
