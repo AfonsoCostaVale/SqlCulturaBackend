@@ -232,8 +232,8 @@ public class TableParametroCultura {
 	            " WHERE " + TABLE_PARAMETROCULTURA_COLLUMS[0] + " = " + var_parametroID + ";";
 
 
-	    String finalSelect= " SELECT "+var_parametroID +" as "+TABLE_PARAMETROCULTURA_COLLUMS[0] + ";";
-	    createStoredProcedure(connection, SP_ALTERAR_PARAMETRO_CULTURA_INVESTIGADOR_NAME,declare+ statements, args);
+	    String finalSelect= "\n SELECT "+var_parametroID +" as "+TABLE_PARAMETROCULTURA_COLLUMS[0];
+	    createStoredProcedure(connection, SP_ALTERAR_PARAMETRO_CULTURA_INVESTIGADOR_NAME,declare+ statements+finalSelect, args);
 
 	}
 
